@@ -1,10 +1,9 @@
-import Login from "@/components/admin/auth-component/Login";
-import Image from "next/image";
+import AdminDashboard from "@/components/admin/AdminDashboard";
 
 export default function Home() {
   return (
-  <div> 
-    <Login/>
-  </div>
+    <>
+      <AdminDashboard />
+    </>
   );
 }
