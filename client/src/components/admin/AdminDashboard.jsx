@@ -1,25 +1,25 @@
-import { useEffect } from "react";
-import React, { Fragment, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+"use client"
+import React, { Fragment, useState , useEffect} from "react";
+// import { useDispatch, useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import axios from "axios";
-import { sideMenus } from "../config/data";
-import { removeToken, setUserDetails } from "../redux/action/authAction";
+// import { removeToken, setUserDetails } from "../redux/action/authAction";
+import { sideMenus } from "@/config/data";
 import CloseIcon from "./admin-pages/Svg/CloseIcon";
 
 const AdminDashboard = () => {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const [ComponentId, setComponentId] = useState(0);
 
   const [showDrawer, setShowDrawer] = useState(false);
-  const { token } = useSelector((state) => state?.auth);
-  const navigate = useNavigate();
+  // const { token } = useSelector((state) => state?.auth);
+  const token = "";
+  const router = useRouter();
 
   const handleClick = (id, url) => {
     setComponentId(id);
     setShowDrawer(false);
-    navigate(url);
   };
   const handleSignout = async () => {
     try {
@@ -31,9 +31,9 @@ const AdminDashboard = () => {
       });
       console.log(res);
       if (res?.data?.success) {
-        dispatch(removeToken());
+        // dispatch(removeToken());
         toast.success("Logout successfully !");
-        navigate("/login");
+        router.push("/login");
       } else {
         toast.error("Logout failed try again !");
       }
@@ -56,7 +56,7 @@ const AdminDashboard = () => {
           <div className="bg-black h-[2px] w-[20px]"></div>
         </div>
 
-        <div className={`2xl:w-[20%] lg:w-[25%]  w-[280px] md:h-auto h-full z-[11] bg-theme-color text-white xl:py-[40px] xl:px-[30px] px-[10px] py-[10px] transition-all duration-1000 delay-100 ease-linear
+        <div className={`xl:w-[20%] lg:w-[25%]  w-[280px] md:h-auto h-full z-[11] bg-theme-color text-white xl:py-[40px] xl:px-[25px] px-[10px] py-[10px] transition-all duration-1000 delay-100 ease-linear
                  ${
                    showDrawer
                      ? "block  absolute top-0 left-0 min-h-screen is-show"
@@ -69,25 +69,25 @@ const AdminDashboard = () => {
           >
             <div className="">
               {" "}
-              <CloseIcon />{" "}
+              <CloseIcon />
             </div>
           </div>
           <div className="">
-            <div className="flex justify-center items-center whitespace-pre-wrap py-[20px]">
+            <div className="flex justify-center items-center whitespace-pre-wrap pb-[20px]">
               <h1 className="bold-32 text-center whitespace-nowrap ">
                 Admin Dashboard
               </h1>
             </div>
             <div className="bg-white h-[1px] w-[70%] mx-auto"></div>
-            <div className="flex flex-col 2xl:gap-6 gap-5 pt-[60px]">
+            <div className="flex flex-col 2xl:gap-6 gap-3 pt-[60px]">
               {sideMenus.map((item, index) => (
                 <div
                   key={index}
-                  className={`pl-6 py-3 mx-5 rounded-md  flex gap-x-3 items-center cursor-pointer  transition-colors medium-16 bg-[#0f2439] 
+                  className={`pl-6 py-[10px] mx-4 rounded flex gap-x-3 items-center cursor-pointer  transition-colors font-semibold 2xl:text-[16px] text-[15px] 
                                     ${
                                       item.id === ComponentId
                                         ? "bg-theme-secondary text-primary"
-                                        : "hover:bg-theme-secondary hover:text-primary hover:rounded-md "
+                                        : "hover:bg-theme-secondary hover:text-primary hover:rounded "
                                     }  `}
                   onClick={() => handleClick(item.id, item.url)}
                 >
@@ -100,7 +100,7 @@ const AdminDashboard = () => {
           </div>
 
           <div
-            className={`pl-6 py-3 mx-5 rounded text-center cursor-pointer my-3 flex items-center transition-colors dash-menu gap-x-3  medium-16 hover:bg-theme-secondary hover:text-primary hover:rounded-md  bg-[#0f2439] }`}
+            className={`pl-6 py-3 mx-5 rounded text-center cursor-pointer my-3 flex items-center transition-colors dash-menu gap-x-3 font-semibold  2xl:text-[16px] text-[15px] hover:bg-theme-secondary hover:text-primary hover:rounded-md   bg-[#0f2439] }`}
             onClick={handleSignout}
           >
             {/* <LogoutIcon /> */}
@@ -109,7 +109,7 @@ const AdminDashboard = () => {
             </div>
           </div>
         </div>
-        <div className=" bg-[#f3f3f3] 2xl:w-[80%] lg:w-[75%] w-full">
+        <div className=" bg-[#f3f3f3] xl:w-[80%] lg:w-[75%] w-full">
           {sideMenus.map((item, index) => (
             <Fragment key={index}>
               {ComponentId === item.id && item.component}

@@ -54,71 +54,59 @@ const Login = () => {
   return (
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 h-screen w-full">
-      <RightSection />
+        <div className="hidden sm:block">
+          <img
+            className="w-full h-full object-cover"
+            //  src={loginImg}  
+            alt=""
+          />
+        </div>
 
-      <div className="bg-[#ffff] flex flex-col justify-center px-[40px] py-[40px] border-l border-[#f3f3f3]">
-        <form className="max-w-[80%] w-full mx-auto bg-[#ffff] p-4 rounded" onSubmit={handleSubmit}>
-          <div className="flex flex-col gap-4 justify-center p-8 lg:p-14 md:max-w-[80%] lg:w-full lg:max-w-[100%] mx-auto ">
-            <div className="text-left ">
-              <p className="mb-2 bold-40 ">Welcome Admin</p>
-              <p className="regular-16 leading-[26px] text-gray-400 mb-4">
-                Welcome back! Please enter your details
-              </p>
-            </div>
-            <div className="md:py-2">
+        <div className="bg-white flex flex-col justify-center">
+          <form className="max-w-[400px] w-full mx-auto bg-white p-4">
+            <h2 className="text-4xl font-bold text-center py-6">
+              Welcome Admin
+            </h2>
+            <div className="flex flex-col py-2">
+              {/* <label>Username</label> */}
               <input
-                type="email"
                 name="email"
-                placeholder="Email address"
-                className="login-input"
+                type="email"
+                className="border p-2 rounded"
                 onChange={InputHandler}
                 title="enter valid email ex. abc@gmail.com"
                 required
               />
             </div>
-            <div className="">
+            <div className="flex flex-col py-2">
+               {/* <label>Password</label> */}
               <input
-                type={showPassword ? "text" : "password"}
                 name="password"
-                placeholder="Password"
-                className="login-input "
+                type={showPassword ? "text" : "password"}
+                className="border p-2 rounded"
                 onChange={InputHandler}
                 minLength={8}
                 required
                 autoComplete="current-password"
               />
-              <div className="flex items-center mt-4 px-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  id="showPassword"
-                  checked={showPassword}
-                  onChange={() => setShowPassword(!showPassword)}
-                  className="mr-2"
-                />
-                <label htmlFor="showPassword" className="login-input-label">
-                  Show Password
-                </label>
-              </div>
             </div>
-
-            <div className="mt-6">
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="login_button"
-              >
-                {isLoading ? "Loading.." : "Sign In"}
-              </button>
-              {/* <Link to="/forgot-password"> */}
-              <div className="regular-16 underline text-center py-3 cursor-password">
-                Forgot password
-              </div>
-              {/* </Link> */}
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="border w-full my-5 py-2 bg-black hover:bg-black text-white rounded"
+            >
+              {isLoading ? "Loading.." : "Sign In"}
+            </button>
+            <div className="flex justify-between">
+              <p className="flex items-center">
+                <input className="mr-2" type="checkbox" /> Remember Me
+              </p>
+              <p>Create an account</p>
             </div>
-          </div>
-        </form>
+          </form>
         </div>
       </div>
+      ;
     </>
   );
 };
