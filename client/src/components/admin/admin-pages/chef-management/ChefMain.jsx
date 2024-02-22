@@ -1,6 +1,7 @@
 import React, { Fragment, useState, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
 
 import CloseIcon from "../Svg/CloseIcon";
 import Loader from "../../loader/Index";
@@ -26,7 +27,7 @@ const ChefMain = () => {
   const [openPopup, setOpenPopup] = useState(false);
   const [previewData, setPreviewData] = useState({});
   const visiblePageCount = 10;
-  const token = 10;
+  const { token } = useSelector((state) => state?.auth);
 
   const refreshdata = () => {
     setRefresh(!isRefresh);
@@ -96,7 +97,7 @@ const ChefMain = () => {
     setIsLoader(true);
     const options = {
       method: "GET",
-      url: `/api/auth/all-chefs?page=${pageNo}&limit=${visiblePageCount}`,
+      url: `/api/chef/chefs?page=${pageNo}&limit=${visiblePageCount}`,
       headers: {
         Authorization: token,
         "Content-Type": "application/json",
@@ -106,7 +107,7 @@ const ChefMain = () => {
       .request(options)
       .then((res) => {
         console.log(res);
-        if (res?.data?.success) {
+        if (res?.data.status===200) {
           setIsLoader(false);
           setAllData(res?.data);
         } else {
@@ -120,7 +121,7 @@ const ChefMain = () => {
       });
   };
   useEffect(() => {
-    // getAllData(1);
+    getAllData(1);
   }, [isRefresh]);
 
   return (
@@ -180,13 +181,13 @@ const ChefMain = () => {
                 </thead>
 
                 <tbody>
-                  {Array.isArray(allData?.users) &&
-                    allData?.users?.length > 0 &&
-                    allData?.users?.map((items, index) => (
+                  {Array.isArray(allData?.k) &&
+                    allData?.chefs?.length > 0 &&
+                    allData?.chefs?.map((items, index) => (
                       <tr key={index}>
                         <td className="table_data">{index + 1}</td>
                         <td className="table_data capitalize">
-                          {items?.fullname}
+                          {items?.name}
                         </td>
                         <td className="table_data">{items?.specialty} </td>
                         <td className="table_data">{items?.bio}</td>
@@ -212,7 +213,7 @@ const ChefMain = () => {
                 </tbody>
               </table>
             </div>
-            {Array.isArray(allData?.users) && allData?.users?.length === 0 && (
+            {Array.isArray(allData?.chefs) && allData?.chefs?.length === 0 && (
               <div className="no_data">
                 <p className="text-[18px] fontsemibold">No data</p>
               </div>

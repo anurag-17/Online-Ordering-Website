@@ -1,15 +1,12 @@
+import Image from "next/image";
 import React from "react";
 
-
 const RightSection = () => {
-    return (
-        <div className="block lg:w-[50%] px-[10px] lg:px-0">
-            <img
-                // src={bgImg}
-                alt="img"
-                className="w-full h-auto mx-auto"
-            />
-        </div>)
+  return (
+    <div className="">
+      <Image src="/images/bg.jpg" alt="img" height={500} width={500} />
+    </div>
+  );
 };
 
 export default RightSection;
