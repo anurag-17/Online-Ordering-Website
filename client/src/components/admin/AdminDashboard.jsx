@@ -1,20 +1,19 @@
-"use client"
-import React, { Fragment, useState , useEffect} from "react";
-// import { useDispatch, useSelector } from "react-redux";
+"use client";
+import React, { Fragment, useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import axios from "axios";
-// import { removeToken, setUserDetails } from "../redux/action/authAction";
 import { sideMenus } from "@/config/data";
 import CloseIcon from "./admin-pages/Svg/CloseIcon";
+import { removeToken, rem_AdDetails } from "@/redux/adminSlice/authSlice";
 
 const AdminDashboard = () => {
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const [ComponentId, setComponentId] = useState(0);
 
   const [showDrawer, setShowDrawer] = useState(false);
-  // const { token } = useSelector((state) => state?.auth);
-  const token = "";
+  const { token } = useSelector((state) => state?.auth);
   const router = useRouter();
 
   const handleClick = (id, url) => {
@@ -29,18 +28,24 @@ const AdminDashboard = () => {
           "Content-Type": "application/json",
         },
       });
-      console.log(res);
+      // console.log(res);
       if (res?.data?.success) {
-        // dispatch(removeToken());
         toast.success("Logout successfully !");
-        router.push("/login");
+        dispatch(removeToken());
+        dispatch(rem_AdDetails());
+        router.push("/admin/sign-in");
       } else {
-        toast.error("Logout failed try again !");
+        dispatch(removeToken())
+        dispatch(rem_AdDetails())
+        router.push("/admin/sign-in");
+        // toast.error("Logout failed try again !");
       }
     } catch (error) {
-      // dispatch(removeToken());
+      dispatch(removeToken());
+      dispatch(rem_AdDetails());
+      router.push("/admin/sign-in");
       console.error("Error occurred:", error);
-      toast.error(error?.response?.data?.message || "Invalid token !");
+      // toast.error(error?.response?.data?.error || "Invalid token !");
     }
   };
 
@@ -56,7 +61,8 @@ const AdminDashboard = () => {
           <div className="bg-black h-[2px] w-[20px]"></div>
         </div>
 
-        <div className={`xl:w-[20%] lg:w-[25%]  w-[280px] md:h-auto h-full z-[11] bg-theme-color text-white xl:py-[40px] xl:px-[25px] px-[10px] py-[10px] transition-all duration-1000 delay-100 ease-linear
+        <div
+          className={`xl:w-[20%] lg:w-[25%]  w-[280px] md:h-auto h-full z-[11] bg-theme-color text-white xl:py-[40px] xl:px-[25px] px-[10px] py-[10px] transition-all duration-1000 delay-100 ease-linear
                  ${
                    showDrawer
                      ? "block  absolute top-0 left-0 min-h-screen is-show"
