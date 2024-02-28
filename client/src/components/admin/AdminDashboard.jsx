@@ -51,7 +51,7 @@ const AdminDashboard = () => {
 
   return (
     <section className="">
-      <div className="flex min-h-screen relative lg:static">
+      <div className="flex max-h-screen relative lg:static">
         <div
           className="py-2 px-3  absolute top-4 left-2 flex flex-col gap-[5px] cursor-pointer lg:hidden"
           onClick={() => setShowDrawer(true)}
@@ -106,7 +106,7 @@ const AdminDashboard = () => {
           </div>
 
           <div
-            className={`pl-6 py-3 mx-5 rounded text-center cursor-pointer my-3 flex items-center transition-colors dash-menu gap-x-3 font-semibold  2xl:text-[16px] text-[15px] hover:bg-theme-secondary hover:text-primary hover:rounded-md   bg-[#0f2439] }`}
+            className={`pl-6 py-3 mx-5 rounded text-center cursor-pointer my-3 flex items-center transition-colors dash-menu gap-x-3 font-semibold  2xl:text-[16px] text-[15px] hover:bg-theme-secondary hover:text-primary hover:rounded-md }`}
             onClick={handleSignout}
           >
             {/* <LogoutIcon /> */}

@@ -7,15 +7,16 @@ import Loader from "@/components/admin/loader/Index";
 const AddModal = ({ closeModal, refreshdata }) => {
   const [formData, setFormData] = useState({
     name: "",
-    specialty: "",
-    bio: "",
+    price: "",
+    chef: "",
+    description: "",
     images: [],
-  });
+  }); 
   const [image, setImage] = useState("");
   const [isLoading, setLoading] = useState(false);
   const [imageDisable, setImageDisable] = useState(false);
   const [imageUploading, setImageUploading] = useState(false);
-  const {ad_token, isLoggedIn} = useSelector((state) => state.auth);
+  const { ad_token } = useSelector((state) => state.auth);
 
   const InputHandler = (e) => {
     if (e.target.name === "image") {
@@ -103,7 +104,7 @@ const AddModal = ({ closeModal, refreshdata }) => {
               <input
                 type="text"
                 name="name"
-                placeholder="Enter chef name"
+                placeholder="Enter dish name"
                 className="login-input w-full mt-1 "
                 onChange={InputHandler}
                 required
@@ -111,28 +112,44 @@ const AddModal = ({ closeModal, refreshdata }) => {
             </div>
 
             <div className="py-2 ">
-              <span className="login-input-label capitalize"> specialty :</span>
+              <span className="login-input-label capitalize"> price :</span>
               <input
-                type="text"
-                name="specialty"
-                placeholder="Enter specialty"
+                type="number"
+                name="price"
+                placeholder="Enter price"
                 className="login-input w-full mt-1 "
                 onChange={InputHandler}
               />
             </div>
 
             <div className="py-2 ">
-              <span className="login-input-label capitalize"> bio :</span>
+              <span className="login-input-label capitalize"> chef :</span>
               <input
                 type="text"
-                name="bio"
-                placeholder="Enter chef`s bio"
+                name="chef"
+                placeholder="Enter chef"
                 className="login-input w-full mt-1 "
                 onChange={InputHandler}
               />
             </div>
 
-            <div className="py-2 mt-1 flex  items-end gap-x-10">
+            <div className="py-2 ">
+              <span className="login-input-label capitalize">
+                {" "}
+                description :
+              </span>
+              <textarea
+                type="text"
+                name="description"
+                placeholder="Enter description"
+                className="login-input w-full mt-1 h-[100px]"
+                onChange={InputHandler}
+              >
+                {" "}
+              </textarea>
+            </div>
+
+            <div className="py-2 flex  items-end gap-x-10">
               <div className="w-[50%]">
                 <span className="login-input-label cursor-pointer mb-1">
                   Images :
@@ -149,7 +166,7 @@ const AddModal = ({ closeModal, refreshdata }) => {
                   />
                 </div>
               </div>
-              <div className="">
+              <div className="pt-2">
                 <button
                   className={`focus-visible:outline-none  text-white text-[13px] px-4 py-1 rounded
                             ${imageDisable ? "bg-[green]" : "bg-[#070708bd]"}`}

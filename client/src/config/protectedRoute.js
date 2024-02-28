@@ -13,36 +13,37 @@ const protectedRoute = (WrappedComponent) => {
   const Wrapper = (props) => {
     const router = useRouter();
     const dispatch = useDispatch();
-    const adminAuthToken = useSelector((state) => state.auth?.token);
+    const {ad_token, isLoggedIn} = useSelector((state) => state.auth);
     // const loading = true
     const [isLoading, setIsLoading] = useState(false);
     const [isAuth, setIsAuth] = useState(false);
-    console.log(adminAuthToken);
+    // console.log(ad_token);
 
     useEffect(() => {
       const checkAuth = () => {
-        if (!adminAuthToken) {
+        if (!isLoggedIn && !ad_token) {
           router.push("/admin/sign-in");
         }
-        if (adminAuthToken) {
+        if (ad_token) {
           verify();
         }
       };
 
       checkAuth();
-    }, [adminAuthToken, router]);
+    }, [ad_token, isLoggedIn,router]);
 
     const verify = async () => {
       setIsLoading(true);
       setIsAuth(false);
       try {
         const res = await axios.get(
-          `/api/auth/verifyUserToken/${adminAuthToken}`
+          `/api/auth/verifyUserToken/${ad_token}`
         );
-        if (res?.data?.data === null) {
-          router.push("/admin/sign-in");
-          dispatch(removeToken());
-        }
+        console.log(res)
+        // if (res?.data?.data === null) {
+        //   router.push("/admin/sign-in");
+        //   dispatch(removeToken());
+        // }
         if (res.status === 200) {
           setIsAuth(true);
           setIsLoading(false);
@@ -61,9 +62,9 @@ const protectedRoute = (WrappedComponent) => {
 
     return (
       <>
-        {isLoading ? (
+        {isLoading  ? (
           <Loader />
-        ) : adminAuthToken && isAuth ? (
+        ) : ad_token && isAuth ? (
           <WrappedComponent {...props} />
         ) : null}
       </>

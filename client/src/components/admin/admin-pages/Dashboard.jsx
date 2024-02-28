@@ -1,4 +1,5 @@
 import React, { Fragment } from "react";
+import Link from "next/link";
 import { Menu, Transition } from "@headlessui/react";
 // import { useSelector } from "react-redux";
 
@@ -6,7 +7,6 @@ import PasswordIcon from "./Svg/PasswordIcon";
 import ProfileIcon from "./Svg/ProfileIcon";
 import SignOutIcon from "./Svg/SignOutIcon";
 import UsersIcon from "./Svg/UsersIcon";
-import Link from "next/link";
 
 const Dashboard = () => {
   // const { userDetails } = useSelector((state) => state?.auth);
@@ -45,7 +45,7 @@ const Dashboard = () => {
                     <div className="p-1 flex flex-col gap-4">
                       <Menu.Item>
                         <Link
-                          to="/change-password"
+                          href="/change-password"
                           className="flex gap-x-3 hover:underline text-gray-700 rounded  text-sm group transition-colors items-center"
                         >
                           <PasswordIcon className="h-[20px] w-[20px] mr-2" />
@@ -54,7 +54,7 @@ const Dashboard = () => {
                       </Menu.Item>
                       <Menu.Item>
                         <Link
-                          to="/login"
+                          href="/login"
                           className="flex gap-x-3 hover:underline text-gray-700 rounded  text-sm group transition-colors items-center"
                         >
                           <SignOutIcon />
@@ -74,14 +74,14 @@ const Dashboard = () => {
             <div className="col-span-1 bg-white px-5 py-4 rounded flex items-center gap-5">
               <div className="bg-primary h-[50px] w-[50px] flexCenter rounded-[6px]" > <UsersIcon /> </div>
               <div className="">
-                <h6 className="capitalize text-[15px]">Total Users</h6>
+                <h6 className="capitalize text-[15px]">Total Chefs</h6>
                 <h6 className="capitalize text-[16px] font-semibold pt-1">4</h6>
               </div>
             </div>
            < div className="col-span-1 bg-white px-5 py-4 rounded flex items-center gap-5">
               <div className="bg-primary h-[50px] w-[50px] flexCenter rounded-[6px]" > <UsersIcon /> </div>
               <div className="">
-                <h6 className="capitalize text-[15px]">Total Properties</h6>
+                <h6 className="capitalize text-[15px]">Total Orders</h6>
                 <h6 className="capitalize text-[16px] font-semibold pt-2">
                   10
                 </h6>
