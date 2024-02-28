@@ -24,7 +24,7 @@ const DeleteUser = ({ deleteId, closeModal, refreshdata,token}) => {
     axios
       .request(options)
       .then(function (res) {
-        if (res.data?.success) {
+        if (res.data?.success || res.status === 200) {
           setLoading(false);
           toast.success("User deleted successfully!");
           closeModal();
@@ -60,8 +60,8 @@ const DeleteUser = ({ deleteId, closeModal, refreshdata,token}) => {
           </button>
         
             <button
-              className={`w-full  delete_btn
-              ${isLoading ?  "text-[gray]" : "text-[red] hover:bg-[#efb3b38a]" }`}
+              className={`w-full  
+              ${isLoading ?  "text-[gray]" : "delete_btn" }`}
               disabled={isLoading}
               onClick={handleDelete}
             >

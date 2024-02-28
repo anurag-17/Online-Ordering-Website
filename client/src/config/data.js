@@ -1,5 +1,6 @@
 import ChefMain from "@/components/admin/admin-pages/chef-management/ChefMain";
 import Dashboard from "@/components/admin/admin-pages/Dashboard";
+import FoodMenu from "@/components/admin/admin-pages/food-menu/FoodMenu";
 import User from "@/components/admin/admin-pages/user/User";
 
 export const sideMenus = [
@@ -21,11 +22,16 @@ export const sideMenus = [
   },
   {
     id: 3,
+    label: " Menu Items",
+    component : <FoodMenu />,
+  },
+  {
+    id: 4,
     label: "Order management",
     // component : <Property />,
   },
   {
-    id: 4,
+    id: 5,
     label: "Order History",
     // component : <Dashboard />,
   },

@@ -3,7 +3,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  token: null,
+  ad_token: null,
+  isLoggedIn : true ,
   ad_details: null,
 };
 
@@ -12,10 +13,13 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     setToken: (state, action) => {
-      state.token = action.payload;
+      state.ad_token = action.payload;
+      state.isLoggedIn = true;
+      
     },
     removeToken: (state, action) => {
-      state.token = null;
+      state.ad_token = null;
+      state.isLoggedIn = false;
     },
     adDetails : (state, action) => {
         state.ad_details = action.payload;
