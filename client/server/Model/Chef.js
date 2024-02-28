@@ -11,7 +11,7 @@ const chefSchema = new mongoose.Schema({
     type: String,
   },
   images: {
-    type: String,
+    type: Array,
   }
 });
 
