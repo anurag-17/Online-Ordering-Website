@@ -18,7 +18,7 @@ exports.getAllMenuItems = async (req, res, next) => {
     const currentPage = parseInt(page, 10);
     const itemsPerPage = parseInt(limit, 10);
 
-    let menuItemQuery = MenuItem.find().populate("chef");
+    let menuItemQuery = MenuItem.find().populate("chef").populate("category");
 
     if (search) {
       menuItemQuery = menuItemQuery.or([
@@ -50,7 +50,7 @@ exports.getMenuItemById = async (req, res, next) => {
   const { id } = req.params;
 
   try {
-    const menuItem = await MenuItem.findById(id).populate("chef");
+    const menuItem = await MenuItem.findById(id).populate("chef").populate("category");
     if (!menuItem) {
       return res.status(404).json({ error: 'Menu item not found' });
     }

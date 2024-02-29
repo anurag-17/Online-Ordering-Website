@@ -4,8 +4,10 @@ const multer = require('multer');
 const {
   register,
   login,
+  chefLogin,
   adminLogin,
   logout,
+  chefLogout,
   forgotPassword,
   resetPassword,
   getallUser,
@@ -23,9 +25,13 @@ const upload = multer({ storage: storage });
 
 router.route("/login").post(login);
 
+router.route("/chefLogin").post(chefLogin);
+
 router.route("/adminLogin").post(adminLogin);
 
 router.route("/logout").get(isAuthenticatedUser, logout);
+
+router.route("/chefLogout").get(isAuthenticatedUser, chefLogout);
 
 router.route("/verifyUserToken/:token").get(verifyUser)
 

@@ -5,6 +5,7 @@ const { generateToken , verifyToken} = require("../config/jwtToken");
 const sendToken = require("../Utils/jwtToken");
 const jwt = require("jsonwebtoken");
 const uploadOnS3 = require("../Utils/uploadImage");
+const Chef = require("../Model/Chef");
 
 exports.uploadImage = async (req, res, next) => {
   try {
@@ -165,6 +166,93 @@ exports.adminLogin = async (req, res, next) => {
       success: false,
       error: error.message,
     });
+  }
+};
+
+exports.chefLogin = async (req, res, next) => {
+  const { email, password } = req.body;
+  
+  try {
+    const findAdmin = await Chef.findOne({ email }).select("+password");
+    
+    if (!findAdmin) {
+      throw new Error("Chef not found");
+    }
+
+    if (await findAdmin.matchPasswords(password)) {
+      const token = generateToken({ id: findAdmin._id });
+      await Chef.findByIdAndUpdate(
+        { _id: findAdmin._id?.toString() },
+        { activeToken: token },
+        { new: true }
+      );
+      const user = {
+        success: true,
+        user: {
+          _id: findAdmin._id,
+          name: findAdmin.name,
+          email: findAdmin.email,
+          mobile: findAdmin.mobile,
+          specialty: findAdmin.specialty,
+          bio: findAdmin.bio,
+          experience: findAdmin.experience
+        },
+        token: token,
+      };
+
+      return res.status(200).json(user);
+    } else {
+      throw new Error("Invalid Credentials");
+    }
+  } catch (error) {
+    res.status(401).json({
+      success: false,
+      error: error.message,
+    });
+  }
+};
+
+exports.chefLogout = async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+
+    let token;
+
+    // Check if the Authorization header is present
+    if (authHeader) {
+      token = authHeader;
+    } else {
+      return res.status(401).json({ message: "Please provide a token" });
+    }
+
+    // Verify the token
+    const decodedData = jwt.verify(token, process.env.JWT_SECRET);
+
+    // Find the chef by ID
+    const chef = await Chef.findById(decodedData.id);
+
+    // Check if the chef exists and the active token matches the provided token
+    if (!chef || chef.activeToken !== token) {
+      return res.status(401).json({ message: "Invalid token or session" });
+    }
+
+    // Remove the active token from the chef
+    chef.activeToken = undefined;
+    await chef.save();
+
+    // Send response
+    return res.status(200).json({ message: "Logout successful" });
+  } catch (error) {
+    // Handle JWT errors
+    if (error.name === "JsonWebTokenError") {
+      return res.status(401).json({ message: "Invalid token" });
+    } else if (error.name === "TokenExpiredError") {
+      return res.status(401).json({ message: "Token expired, please login again" });
+    } else {
+      // Handle other errors
+      console.error("Error:", error);
+      return res.status(500).json({ message: "Server error" });
+    }
   }
 };
 

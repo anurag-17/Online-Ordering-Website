@@ -31,6 +31,7 @@ connectDB();
   server.use('/api/auth', require("./server/Route/AuthRouter"));
   server.use('/api/chef', require("./server/Route/ChefRouter"));
   server.use('/api/menu', require("./server/Route/MenuRouter"));
+  server.use('/api/category', require("./server/Route/CategoryRouter"));
 
   // Next.js request handling
   server.get('*', (req, res) => {
