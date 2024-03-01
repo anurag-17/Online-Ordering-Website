@@ -12,15 +12,14 @@ import DeleteUser from "./modal/DeleteModal";
 export const headItems = [
   "S. No.",
   "Name",
-  "Email",
-  "number",
-  "Specialty",
-  "Bio",
+  "description",
+  "chef name",
   "Images",
+  "price",
   "Action",
 ];
 
-const ChefMain = () => {
+const FoodMenu = () => {
   const [isRefresh, setRefresh] = useState(false);
   const [allData, setAllData] = useState([]);
   const [isLoader, setIsLoader] = useState(false);
@@ -64,7 +63,7 @@ const ChefMain = () => {
       setIsLoader(true);
       const options = {
         method: "GET",
-        url: `/api/chef/chefs/${id}`,
+        url: `/api/menu/menuItems/${id}`,
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -118,7 +117,7 @@ const ChefMain = () => {
   const searchDataFunc = (search_cate) => {
     const options = {
       method: "GET",
-      url: `/api/chef/chefs?search=${search_cate}`,
+      url: `/api/menu/menuItems?search=${search_cate}`,
       headers: {
         Authorization: token,
         "Content-Type": "multipart/form-data",
@@ -146,7 +145,7 @@ const ChefMain = () => {
     setIsLoader(true);
     const options = {
       method: "GET",
-      url: `/api/chef/chefs?page=${pageNo}&limit=${visiblePageCount}`,
+      url: `/api/menu/menuItems?page=${pageNo}&limit=${visiblePageCount}`,
       headers: {
         Authorization: token,
         "Content-Type": "application/json",
@@ -155,7 +154,7 @@ const ChefMain = () => {
     axios
       .request(options)
       .then((res) => {
-        // console.log(res);
+        console.log(res);
         if (res?.status === 200) {
           setIsLoader(false);
           setAllData(res?.data);
@@ -179,7 +178,7 @@ const ChefMain = () => {
       <section className="w-full">
         <div className=" mx-auto">
           <div className="rounded-[10px] bg-white py-[20px] flexBetween  md:flex-row gap-3 px-[20px] mt-[20px] lg:mt-0">
-            <p className=" text-[22px] font-semibold">Chef Management</p>
+            <p className=" text-[22px] font-semibold">Menu Items</p>
             <div className="flexCenter gap-x-7 lg:gap-x-5 md:flex-auto gap-y-3 ">
               <div className="border rounded border-primary  bg-[#302f2f82]] flexCenter h-[32px] pl-[10px] md:w-auto w-full">
                 <input
@@ -210,7 +209,7 @@ const ChefMain = () => {
                 className="primary_btn py-2"
                 onClick={() => setAddNewChef(true)}
               >
-                Add new chef
+                Add new menu
               </button>
             </div>
           </div>
@@ -230,18 +229,22 @@ const ChefMain = () => {
                 </thead>
 
                 <tbody>
-                  {Array.isArray(allData?.chefs) &&
-                    allData?.chefs?.length > 0 &&
-                    allData?.chefs?.map((items, index) => (
+                  {Array.isArray(allData?.menuItems) &&
+                    allData?.menuItems?.length > 0 &&
+                    allData?.menuItems?.map((items, index) => (
                       <tr key={index}>
                         {/* {console.log(items)} */}
                         <td className="table_data">{index + 1}</td>
-                        <td className="table_data capitalize">{items?.name}</td>
-                        <td className="table_data">{items?.email} </td>
-                        <td className="table_data">{items?.mobile} </td>
-                        <td className="table_data min-w-[250px]">{items?.specialty} </td>
-                        <td className="table_data min-w-[250px]">{items?.bio}</td>
-                        <td className="table_data">{items?.images}</td>
+                        <td className="table_data capitalize">
+                          {items?.name}
+                        </td>
+                        <td className="table_data">{items?.description} </td>
+                        <td className="table_data">  
+                        <div className="cursor-pointer underline  ">{items?.chef?.name}</div></td>
+                        <td className="table_data">
+                          {items?.images}
+                        </td>
+                        <td className="table_data">{items?.price}</td>
                         <td className="table_data">
                           <div className="table_btn_div">
                             {/* <button
@@ -269,7 +272,7 @@ const ChefMain = () => {
                 </tbody>
               </table>
             </div>
-            {Array.isArray(allData?.chefs) && allData?.chefs?.length === 0 && (
+            {Array.isArray(allData?.menuItems) && allData?.menuItems?.length === 0 && (
               <div className="no_data">
                 <p className="text-[18px] fontsemibold">No data</p>
               </div>
@@ -318,7 +321,7 @@ const ChefMain = () => {
                     as="h3"
                     className="xl:text-[20px] text-[18px] font-medium leading-6 text-gray-900 " 
                   >
-                    Add new chef
+                    Add new menu item
                   </Dialog.Title>
                   <div className="absolute right-5 top-5 z-10 cursor-pointer" onClick={closeAddPopup}><CloseIcon /> </div>
                   <AddModal
@@ -428,4 +431,4 @@ const ChefMain = () => {
   );
 };
 
-export default ChefMain;
+export default FoodMenu;

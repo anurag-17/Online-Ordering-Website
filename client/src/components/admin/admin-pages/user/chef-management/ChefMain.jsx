@@ -12,8 +12,6 @@ import DeleteUser from "./modal/DeleteModal";
 export const headItems = [
   "S. No.",
   "Name",
-  "Email",
-  "number",
   "Specialty",
   "Bio",
   "Images",
@@ -236,11 +234,11 @@ const ChefMain = () => {
                       <tr key={index}>
                         {/* {console.log(items)} */}
                         <td className="table_data">{index + 1}</td>
-                        <td className="table_data capitalize">{items?.name}</td>
-                        <td className="table_data">{items?.email} </td>
-                        <td className="table_data">{items?.mobile} </td>
-                        <td className="table_data min-w-[250px]">{items?.specialty} </td>
-                        <td className="table_data min-w-[250px]">{items?.bio}</td>
+                        <td className="table_data capitalize">
+                          {items?.name}
+                        </td>
+                        <td className="table_data">{items?.specialty} </td>
+                        <td className="table_data">{items?.bio}</td>
                         <td className="table_data">{items?.images}</td>
                         <td className="table_data">
                           <div className="table_btn_div">

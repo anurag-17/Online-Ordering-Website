@@ -6,9 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 import Loader from "@/components/admin/loader/Index";
 const AddModal = ({ closeModal, refreshdata }) => {
   const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    number: "",
     name: "",
     specialty: "",
     bio: "",
@@ -18,8 +15,7 @@ const AddModal = ({ closeModal, refreshdata }) => {
   const [isLoading, setLoading] = useState(false);
   const [imageDisable, setImageDisable] = useState(false);
   const [imageUploading, setImageUploading] = useState(false);
-  const { ad_token, isLoggedIn } = useSelector((state) => state.auth);
-  const [showPassword, setShowPassword] = useState(false);
+  const {ad_token, isLoggedIn} = useSelector((state) => state.auth);
 
   const InputHandler = (e) => {
     if (e.target.name === "image") {
@@ -102,96 +98,41 @@ const AddModal = ({ closeModal, refreshdata }) => {
       <div className="">
         <form action="" className="" onSubmit={handleSubmit}>
           <div className="flex flex-col justify-center px-4 lg:px-8 py-4 ">
-            <div className="grid grid-cols-2 gap-4">
             <div className="py-2 ">
-              {/* <span className="login-input-label capitalize"> Name :</span> */}
+              <span className="login-input-label capitalize"> Name :</span>
               <input
                 type="text"
                 name="name"
-                placeholder="Chef name"
-                className="login-input w-full h-auto "
-                onChange={InputHandler}
-                required  
-              />
-            </div>
-            <div className="py-2 ">
-              {/* <span className="login-input-label capitalize"> Number :</span> */}
-              <input
-                type="number"
-                name="number"
-                placeholder="Mobile number"
-                className="login-input w-full h-auto"
+                placeholder="Enter chef name"
+                className="login-input w-full mt-1 "
                 onChange={InputHandler}
                 required
               />
             </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-            <div className="py-2">
-            {/* <span className="login-input-label capitalize"> Email :</span> */}
-                    <input
-                      type="email"
-                      name="email"
-                      placeholder="Email address"
-                      className="login-input"
-                      onChange={InputHandler}
-                      title="enter valid email ex. abc@gmail.com"
-                      required
-                    />
-                  </div>
-                  <div className="py-2">
-                  {/* <span className="login-input-label capitalize"> Password :</span> */}
-                    <input
-                      type="text"
-                      name="password"
-                      placeholder="Password"
-                      className="login-input "
-                      onChange={InputHandler}
-                      minLength={8}
-                      required
-                      autoComplete="current-password"
-                    />
-                    {/* <div className="flex items-center mt-4 px-2 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        id="showPassword"
-                        checked={showPassword}
-                        onChange={() => setShowPassword(!showPassword)}
-                        className="mr-2"
-                      />
-                      <label
-                        htmlFor="showPassword"
-                        className="login-input-label"
-                      >
-                        Show Password
-                      </label>
-                    </div> */}
-                  </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
+
             <div className="py-2 ">
-              {/* <span className="login-input-label capitalize"> specialty :</span> */}
+              <span className="login-input-label capitalize"> specialty :</span>
               <input
                 type="text"
                 name="specialty"
                 placeholder="Enter specialty"
-                className="login-input w-full h-auto"
+                className="login-input w-full mt-1 "
                 onChange={InputHandler}
               />
             </div>
 
             <div className="py-2 ">
-              {/* <span className="login-input-label capitalize"> bio :</span> */}
+              <span className="login-input-label capitalize"> bio :</span>
               <input
                 type="text"
                 name="bio"
                 placeholder="Enter chef`s bio"
-                className="login-input w-full h-auto"
+                className="login-input w-full mt-1 "
                 onChange={InputHandler}
               />
             </div>
-            </div>
-            <div className="py-2 flex  items-end gap-x-10">
+
+            <div className="py-2 mt-1 flex  items-end gap-x-10">
               <div className="w-[50%]">
                 <span className="login-input-label cursor-pointer mb-1">
                   Images :

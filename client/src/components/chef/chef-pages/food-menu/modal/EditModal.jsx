@@ -1,25 +1,61 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
-
-import { useDispatch, useSelector } from "react-redux";
 import Loader from "@/components/admin/loader/Index";
-const AddModal = ({ closeModal, refreshdata }) => {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    number: "",
-    name: "",
-    specialty: "",
-    bio: "",
-    images: [],
-  });
+
+const EditModal = ({ closeModal, refreshdata, editData, updateId, token }) => {
+  const [formData, setFormData] = useState();
   const [image, setImage] = useState("");
   const [isLoading, setLoading] = useState(false);
   const [imageDisable, setImageDisable] = useState(false);
   const [imageUploading, setImageUploading] = useState(false);
-  const { ad_token, isLoggedIn } = useSelector((state) => state.auth);
-  const [showPassword, setShowPassword] = useState(false);
+  const [openImage, setOpenImage] = useState(false);
+  const [imageView, setImageview] = useState("");
+  const [imageRemoved, setImageRemoved] = useState(false);
+
+  console.log(formData)
+  const handleVideo = (vid) => {
+    setImageview(vid);
+    setOpenImage(true);
+  };
+
+  const removeVideo = (videoUrl) => {
+    // setLoading(true);
+    setEdit({ ...edit, [`image`]: "" });
+    setImageRemoved(true);
+    return;
+    const options = {
+      method: "DELETE",
+      url: `/api/pages/`,
+      data: {
+        image: videoUrl,
+      },
+      headers: {
+        authorization: `${token}`,
+        "Content-Type": "application/json",
+      },
+    };
+
+    axios
+      .request(options)
+      .then(function (response) {
+        console.log(response);
+        if (response.status === 200) {
+          setLoading(false);
+          toast.success("Removed successfully !");
+          refreshdata();
+        } else {
+          setLoading(false);
+          toast.error("Failed. something went wrong!");
+          return;
+        }
+      })
+      .catch(function (error) {
+        setLoading(false);
+        console.error(error);
+        toast.error("Failed. something went wrong!");
+      });
+  };
 
   const InputHandler = (e) => {
     if (e.target.name === "image") {
@@ -29,23 +65,27 @@ const AddModal = ({ closeModal, refreshdata }) => {
     }
   };
 
-  const uploadVideo = async () => {
+  const uploadImage = async () => {
+
+  console.log(formData)
+  return;
+
     setImageUploading(true);
     try {
       if (!image) {
         setImageUploading(false);
-        return toast.warn("Please upload video");
+        return toast.warn("Please upload Image");
       }
 
       const response = await axios.post(`/api/auth/upload`, image, {
         headers: {
-          authorization: `${ad_token}`,
+          authorization: `${token}`,
           "Content-Type": "multipart/form-data",
         },
       });
       if (response.status === 200) {
         const videoUrl = response?.data?.url;
-        setFormData({ ...formData, ["images"]: videoUrl });
+        setFormData({ ...formData, ["image"]: videoUrl });
         setImageDisable(true);
         setImageUploading(false);
       } else {
@@ -54,7 +94,7 @@ const AddModal = ({ closeModal, refreshdata }) => {
       }
     } catch (error) {
       console.error(
-        "Error uploading video:",
+        "Error uploading Image:",
         error.response?.data || error.message
       );
       setImageUploading(false);
@@ -63,34 +103,31 @@ const AddModal = ({ closeModal, refreshdata }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData.bgUrl == "") {
-      toast.error("Please upload video");
+    if (formData?.images?.length<1) {
+      toast.error("Please upload Image");
     } else {
       // console.log(formData);
       setLoading(true);
       try {
-        const response = await axios.post(`/api/chef/chefs`, formData, {
+        const res = await axios.put(`/api/chef/chefs/${updateId}`, formData, {
           headers: {
-            authorization: `${ad_token}`,
+            authorization: `${token}`,
             "Content-Type": "application/json",
           },
         });
-        console.log(response);
-        if (response.status === 201) {
-          toast.success("Page added successfully.");
+        // console.log(res);
+        if (res.status === 200) {
+          toast.success("Details updated successfully.");
           setLoading(false);
           refreshdata();
           closeModal();
-        } else if (response.status === 203) {
-          toast.error(response?.data?.error);
-          setLoading(false);
-        } else {
+        }  else {
           toast.error("Invalid details");
           setLoading(false);
         }
       } catch (error) {
         console.error("Error during category:", error);
-        toast.error("Something went wrong, try again later.");
+        toast.error( error.response?.data?.error || "Server error");
         setLoading(false);
       }
     }
@@ -102,100 +139,70 @@ const AddModal = ({ closeModal, refreshdata }) => {
       <div className="">
         <form action="" className="" onSubmit={handleSubmit}>
           <div className="flex flex-col justify-center px-4 lg:px-8 py-4 ">
-            <div className="grid grid-cols-2 gap-4">
             <div className="py-2 ">
-              {/* <span className="login-input-label capitalize"> Name :</span> */}
+              <span className="login-input-label capitalize"> Name :</span>
               <input
                 type="text"
                 name="name"
-                placeholder="Chef name"
-                className="login-input w-full h-auto "
-                onChange={InputHandler}
-                required  
-              />
-            </div>
-            <div className="py-2 ">
-              {/* <span className="login-input-label capitalize"> Number :</span> */}
-              <input
-                type="number"
-                name="number"
-                placeholder="Mobile number"
-                className="login-input w-full h-auto"
+                placeholder="Enter chef name"
+                className="login-input w-full mt-1 "
+                defaultValue={editData?.name}
                 onChange={InputHandler}
                 required
               />
             </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-            <div className="py-2">
-            {/* <span className="login-input-label capitalize"> Email :</span> */}
-                    <input
-                      type="email"
-                      name="email"
-                      placeholder="Email address"
-                      className="login-input"
-                      onChange={InputHandler}
-                      title="enter valid email ex. abc@gmail.com"
-                      required
-                    />
-                  </div>
-                  <div className="py-2">
-                  {/* <span className="login-input-label capitalize"> Password :</span> */}
-                    <input
-                      type="text"
-                      name="password"
-                      placeholder="Password"
-                      className="login-input "
-                      onChange={InputHandler}
-                      minLength={8}
-                      required
-                      autoComplete="current-password"
-                    />
-                    {/* <div className="flex items-center mt-4 px-2 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        id="showPassword"
-                        checked={showPassword}
-                        onChange={() => setShowPassword(!showPassword)}
-                        className="mr-2"
-                      />
-                      <label
-                        htmlFor="showPassword"
-                        className="login-input-label"
-                      >
-                        Show Password
-                      </label>
-                    </div> */}
-                  </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
+
             <div className="py-2 ">
-              {/* <span className="login-input-label capitalize"> specialty :</span> */}
+              <span className="login-input-label capitalize"> specialty :</span>
               <input
                 type="text"
                 name="specialty"
                 placeholder="Enter specialty"
-                className="login-input w-full h-auto"
+                className="login-input w-full mt-1 "
+                defaultValue={editData?.specialty}
                 onChange={InputHandler}
+                required
               />
             </div>
 
             <div className="py-2 ">
-              {/* <span className="login-input-label capitalize"> bio :</span> */}
+              <span className="login-input-label capitalize"> bio :</span>
               <input
                 type="text"
                 name="bio"
                 placeholder="Enter chef`s bio"
-                className="login-input w-full h-auto"
+                className="login-input w-full mt-1 "
+                defaultValue={editData?.bio}
                 onChange={InputHandler}
+                required
               />
             </div>
-            </div>
-            <div className="py-2 flex  items-end gap-x-10">
+
+            {/*------------------- image -------------------*/}
+            <div className="py-2 mt-1 flex  items-end gap-x-10">
               <div className="w-[50%]">
                 <span className="login-input-label cursor-pointer mb-1">
                   Images :
                 </span>
+
+                {editData?.image !== "" && !imageRemoved && (
+                  <div className="p-1 flex">
+                    <div
+                      className={`text-[14px] font-[400] cursor-pointer text-[blue] whitespace-nowrap`}
+                      onClick={() => handleVideo(editData?.image)}
+                    >
+                      background video
+                    </div>
+                    <button
+                      type="button"
+                      className={`text-[14px] px-4 font-[400] border rounded h-[25px] text-[red] hover:bg-[#efb3b38a] ml-4`}
+                      onClick={() => removeVideo(editData?.image)}
+                    >
+                      Remove
+                    </button>
+                  </div>
+                )}
+
                 <div className="flex items-center  w-full mt-1">
                   <input
                     id="image"
@@ -203,8 +210,8 @@ const AddModal = ({ closeModal, refreshdata }) => {
                     name="image"
                     className="w-full"
                     onChange={InputHandler}
+                    accept="video/mp4,video/x-m4v,video/*"
                     disabled={imageDisable}
-                    // accept="video/mp4,video/x-m4v,video/*"
                   />
                 </div>
               </div>
@@ -213,7 +220,7 @@ const AddModal = ({ closeModal, refreshdata }) => {
                   className={`focus-visible:outline-none  text-white text-[13px] px-4 py-1 rounded
                             ${imageDisable ? "bg-[green]" : "bg-[#070708bd]"}`}
                   type="button"
-                  onClick={uploadVideo}
+                  onClick={uploadImage}
                   disabled={imageDisable || imageUploading}
                 >
                   {imageDisable
@@ -224,6 +231,7 @@ const AddModal = ({ closeModal, refreshdata }) => {
                 </button>
               </div>
             </div>
+            {/*------------------- image -------------------*/}
 
             <div className="py-[20px] flex items-center justify-center md:justify-end  md:flex-nowrap gap-y-3 gap-x-3 ">
               <button
@@ -248,4 +256,4 @@ const AddModal = ({ closeModal, refreshdata }) => {
   );
 };
 
-export default AddModal;
+export default EditModal;

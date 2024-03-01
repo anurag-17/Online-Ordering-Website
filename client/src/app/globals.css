@@ -73,13 +73,13 @@ body {
     @apply focus-visible:outline-none border-none w-full rounded-[5px] font-normal text-[15px] text-[#6a6969] placeholder:text-[11px];
   }
   .search_btn {
-    @apply px-6  text-[12px]  h-[32px] hover:text-[#f3f3f3] bg-black text-white font-medium; 
+    @apply px-6  text-[12px]  h-[32px] hover:text-[#f3f3f3] bg-primary text-white font-medium; 
   }
   .clear_search_btn {
     @apply px-1 rounded text-[12px] text-[gray] border border-[#6a696917] hover:text-black mr-1 ;
   }
   .outer_table {
-    @apply rounded-[10px] bg-white py-[30px] flexBetween mt-[20px] p-6 overflow-x-scroll w-full ;
+    @apply   flexBetween  overflow-x-scroll w-full  pt-[20px] bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5 mt-[20px];
   }
   .table_head {
     @apply py-3 px-5 text-left bg-white;
@@ -121,6 +121,10 @@ body {
     bg-white text-primary py-1 md:py-2 hover:bg-black focus-visible:outline-none w-full md:w-auto;
   }
 
+  .custom_container {
+    @apply px-[40px] w-full mx-auto;
+  }
+
   button {
     @apply focus-visible:outline-none transition-all duration-500 delay-75 ease-in-out;
   }
@@ -132,26 +136,48 @@ body {
   }
 }
 
-.star {
-  color: gray; /* Default color */
+
+/* Sidebar styles */
+.sidebar-menu {
+  transition: transform 0.3s ease;
+  transform: translateX(-100%);
 }
 
-.filled {
-  color: #0cae3a; /* Filled star color */
+.sidebar-menu.active {
+  transform: translateX(0);
 }
 
-.half-filled {
-  color: #0cae3a;/* Half-filled star color */
+/* Main content styles */
+.main {
+  transition: margin-left 0.3s ease;
 }
 
-
-/* Hide scrollbar for Chrome, Safari and Opera */
-.hide-scrollbar::-webkit-scrollbar {
-  display: none;
+.main.active {
+  margin-left: 0;
 }
 
-/* Hide scrollbar for IE, Edge and Firefox */
-.hide-scrollbar {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+/* ---- SCROLLBAR --- */
+/* * Track */ 
+::-webkit-scrollbar {
+  width: 6px; /* width of the scrollbar */
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #FFF; /* color of the scrollbar thumb */
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #FFF; /* color of the scrollbar thumb on hover */
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #FFF; /* color of the scrollbar track */
+}
+
+/* Handle when dragged */
+::-webkit-scrollbar-thumb:active {
+  background: #666; /* color of the scrollbar thumb when dragged */
 }

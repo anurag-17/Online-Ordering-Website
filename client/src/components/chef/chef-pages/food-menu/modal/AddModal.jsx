@@ -5,21 +5,18 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "@/components/admin/loader/Index";
 const AddModal = ({ closeModal, refreshdata }) => {
+  const { chef_auth , chef_details } = useSelector((state) => state.auth);
   const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    number: "",
     name: "",
-    specialty: "",
-    bio: "",
+    price: "",
+    chef: chef_details?._id,
+    description: "",
     images: [],
-  });
+  }); 
   const [image, setImage] = useState("");
   const [isLoading, setLoading] = useState(false);
   const [imageDisable, setImageDisable] = useState(false);
   const [imageUploading, setImageUploading] = useState(false);
-  const { ad_token, isLoggedIn } = useSelector((state) => state.auth);
-  const [showPassword, setShowPassword] = useState(false);
 
   const InputHandler = (e) => {
     if (e.target.name === "image") {
@@ -39,7 +36,7 @@ const AddModal = ({ closeModal, refreshdata }) => {
 
       const response = await axios.post(`/api/auth/upload`, image, {
         headers: {
-          authorization: `${ad_token}`,
+          authorization: `${chef_auth}`,
           "Content-Type": "multipart/form-data",
         },
       });
@@ -69,9 +66,9 @@ const AddModal = ({ closeModal, refreshdata }) => {
       // console.log(formData);
       setLoading(true);
       try {
-        const response = await axios.post(`/api/chef/chefs`, formData, {
+        const response = await axios.post(`/api/menu/menuItems`, formData, {
           headers: {
-            authorization: `${ad_token}`,
+            authorization: `${chef_auth}`,
             "Content-Type": "application/json",
           },
         });
@@ -102,95 +99,56 @@ const AddModal = ({ closeModal, refreshdata }) => {
       <div className="">
         <form action="" className="" onSubmit={handleSubmit}>
           <div className="flex flex-col justify-center px-4 lg:px-8 py-4 ">
-            <div className="grid grid-cols-2 gap-4">
             <div className="py-2 ">
-              {/* <span className="login-input-label capitalize"> Name :</span> */}
+              <span className="login-input-label capitalize"> Name :</span>
               <input
                 type="text"
                 name="name"
-                placeholder="Chef name"
-                className="login-input w-full h-auto "
-                onChange={InputHandler}
-                required  
-              />
-            </div>
-            <div className="py-2 ">
-              {/* <span className="login-input-label capitalize"> Number :</span> */}
-              <input
-                type="number"
-                name="number"
-                placeholder="Mobile number"
-                className="login-input w-full h-auto"
+                placeholder="Enter dish name"
+                className="login-input w-full mt-1 "
                 onChange={InputHandler}
                 required
               />
             </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-            <div className="py-2">
-            {/* <span className="login-input-label capitalize"> Email :</span> */}
-                    <input
-                      type="email"
-                      name="email"
-                      placeholder="Email address"
-                      className="login-input"
-                      onChange={InputHandler}
-                      title="enter valid email ex. abc@gmail.com"
-                      required
-                    />
-                  </div>
-                  <div className="py-2">
-                  {/* <span className="login-input-label capitalize"> Password :</span> */}
-                    <input
-                      type="text"
-                      name="password"
-                      placeholder="Password"
-                      className="login-input "
-                      onChange={InputHandler}
-                      minLength={8}
-                      required
-                      autoComplete="current-password"
-                    />
-                    {/* <div className="flex items-center mt-4 px-2 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        id="showPassword"
-                        checked={showPassword}
-                        onChange={() => setShowPassword(!showPassword)}
-                        className="mr-2"
-                      />
-                      <label
-                        htmlFor="showPassword"
-                        className="login-input-label"
-                      >
-                        Show Password
-                      </label>
-                    </div> */}
-                  </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
+
             <div className="py-2 ">
-              {/* <span className="login-input-label capitalize"> specialty :</span> */}
+              <span className="login-input-label capitalize"> price :</span>
               <input
-                type="text"
-                name="specialty"
-                placeholder="Enter specialty"
-                className="login-input w-full h-auto"
+                type="number"
+                name="price"
+                placeholder="Enter price"
+                className="login-input w-full mt-1 "
                 onChange={InputHandler}
               />
             </div>
 
-            <div className="py-2 ">
-              {/* <span className="login-input-label capitalize"> bio :</span> */}
+            {/* <div className="py-2 ">
+              <span className="login-input-label capitalize"> chef :</span>
               <input
                 type="text"
-                name="bio"
-                placeholder="Enter chef`s bio"
-                className="login-input w-full h-auto"
+                name="chef"
+                placeholder="Enter chef"
+                className="login-input w-full mt-1 "
                 onChange={InputHandler}
               />
+            </div> */}
+
+            <div className="py-2 ">
+              <span className="login-input-label capitalize">
+                {" "}
+                description :
+              </span>
+              <textarea
+                type="text"
+                name="description"
+                placeholder="Enter description"
+                className="login-input w-full mt-1 h-[100px]"
+                onChange={InputHandler}
+              >
+                {" "}
+              </textarea>
             </div>
-            </div>
+
             <div className="py-2 flex  items-end gap-x-10">
               <div className="w-[50%]">
                 <span className="login-input-label cursor-pointer mb-1">
@@ -208,7 +166,7 @@ const AddModal = ({ closeModal, refreshdata }) => {
                   />
                 </div>
               </div>
-              <div className="">
+              <div className="pt-2">
                 <button
                   className={`focus-visible:outline-none  text-white text-[13px] px-4 py-1 rounded
                             ${imageDisable ? "bg-[green]" : "bg-[#070708bd]"}`}
