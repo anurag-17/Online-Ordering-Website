@@ -14,6 +14,50 @@ body {
   font-family: Inter;
 }
 
+
+@font-face {
+  font-family: "poppins";
+  src: url("../../src//font//Poppins//Poppins-Regular.ttf");
+}
+
+.poppins {
+  font-family: "Poppins", sans-serif;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "quicksand";
+  src: url("../../src//font/Quicksand/Quicksand-VariableFont_wght.ttf");
+}
+
+.quicksand {
+  font-family: "quicksand", sans-serif;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "alata";
+  src: url("../../src//font/Alata/Alata-Regular.ttf");
+}
+
+.alata {
+  font-family: "alata", sans-serif;
+  font-style: normal;
+}
+
+
+.poster-bg {
+  background-image: url('../../public/images/poster.svg');
+  background-size: cover;
+  background-position: center;
+}
+
+.yellow-bg {
+  background-image: url('../../public/images/yellow-bg.svg');
+  background-size: cover;
+  background-position: center;
+}
+
 @layer components {
   .flexCenter {
     @apply flex items-center justify-center;
@@ -46,8 +90,9 @@ body {
   }
 
   .medium-16 {
-    @apply font-[500]  2xl:text-[16px] text-[15px];
+    @apply font-[500] 2xl:text-[16px] text-[15px];
   }
+
   .medium-14 {
     @apply text-[14px] font-[600];
   }
@@ -57,33 +102,41 @@ body {
   }
 
   .bold-32 {
-    @apply 2xl:text-[30px] xl:text-[26px] md:text-[26px] text-[24px]  font-[700] leading-[120%];
+    @apply 2xl:text-[30px] xl:text-[26px] md:text-[26px] text-[24px] font-[700] leading-[120%];
   }
+
   .login-input-label {
     @apply text-[#262628] font-[500] text-[14px];
   }
+
   .login-input {
-    @apply w-full px-4 py-2 2xl:h-[50px]  h-[48px] border border-[#E4E4E4] bg-white rounded-[3px] text-[#262628] text-[15px] font-[400px] leading-normal focus-visible:outline-none placeholder:text-[14px] placeholder:text-[#262628];
+    @apply w-full px-4 py-2 2xl:h-[50px] h-[48px] border border-[#E4E4E4] bg-white rounded-[3px] text-[#262628] text-[15px] font-[400px] leading-normal focus-visible:outline-none placeholder:text-[14px] placeholder:text-[#262628];
   }
 
   .login_button {
-    @apply w-full bg-primary font-medium text-white p-2 rounded-lg  hover:bg-white hover:text-primary hover:border hover:border-[gray-300] h-[50px]  transition-all ease-in-out delay-75 duration-700 hover:border-primary;
+    @apply w-full bg-primary font-medium text-white p-2 rounded-lg hover:bg-white hover:text-primary hover:border hover:border-[gray-300] h-[50px] transition-all ease-in-out delay-75 duration-700 hover:border-primary;
   }
+
   .input_search {
     @apply focus-visible:outline-none border-none w-full rounded-[5px] font-normal text-[15px] text-[#6a6969] placeholder:text-[11px];
   }
+
   .search_btn {
-    @apply px-6  text-[12px]  h-[32px] hover:text-[#f3f3f3] bg-black text-white font-medium; 
+    @apply px-6 text-[12px] h-[32px] hover:text-[#f3f3f3] bg-black text-white font-medium;
   }
+
   .clear_search_btn {
-    @apply px-1 rounded text-[12px] text-[gray] border border-[#6a696917] hover:text-black mr-1 ;
+    @apply px-1 rounded text-[12px] text-[gray] border border-[#6a696917] hover:text-black mr-1;
   }
+
   .outer_table {
-    @apply rounded-[10px] bg-white py-[30px] flexBetween mt-[20px] p-6 overflow-x-scroll w-full ;
+    @apply rounded-[10px] bg-white py-[30px] flexBetween mt-[20px] p-6 overflow-x-scroll w-full;
   }
+
   .table_head {
     @apply py-3 px-5 text-left bg-white;
   }
+
   .table_data {
     @apply text-[14px] font-[400] py-3 px-5;
   }
@@ -91,21 +144,25 @@ body {
   .table_btn_div {
     @apply flex flex-col md:flex-row items-center gap-2 gap-x-5;
   }
+
   .no_data {
     @apply py-4 px-4 w-full flex flex-col items-center justify-center border border-[#f3f3f3] bg-white rounded-[20px] mt-[10px];
   }
 
   .form_col {
-    @apply grid grid-cols-2  py-[5px];
+    @apply grid grid-cols-2 py-[5px];
   }
+
   .form_label_head {
     @apply 2xl:text-[16px] text-[15px] font-[400] leading-tight capitalize;
   }
+
   .form_info {
     @apply 2xl:text-[16px] text-[15px] font-[500] leading-tight;
   }
+
   .form_heading {
-    @apply whitespace-nowrap capitalize leading-tight lg:text-[18px]  text-[16px] font-medium;
+    @apply whitespace-nowrap capitalize leading-tight lg:text-[18px] text-[16px] font-medium;
   }
 
   .delete_btn {
@@ -113,12 +170,11 @@ body {
   }
 
   .primary_btn {
-    @apply px-4 text-[13px] border rounded text-white
-    hover:bg-white hover:text-primary py-1 md:py-2 bg-black focus-visible:outline-none w-full md:w-auto hover:border-primary;
+    @apply px-4 text-[13px] border rounded text-white hover:bg-white hover:text-primary py-1 md:py-2 bg-black focus-visible:outline-none w-full md:w-auto hover:border-primary;
   }
+
   .secondary_btn {
-    @apply px-4 text-[13px] border border-primary rounded hover:text-white
-    bg-white text-primary py-1 md:py-2 hover:bg-black focus-visible:outline-none w-full md:w-auto;
+    @apply px-4 text-[13px] border border-primary rounded hover:text-white bg-white text-primary py-1 md:py-2 hover:bg-black focus-visible:outline-none w-full md:w-auto;
   }
 
   button {
@@ -133,15 +189,18 @@ body {
 }
 
 .star {
-  color: gray; /* Default color */
+  color: gray;
+  /* Default color */
 }
 
 .filled {
-  color: #0cae3a; /* Filled star color */
+  color: #0cae3a;
+  /* Filled star color */
 }
 
 .half-filled {
-  color: #0cae3a;/* Half-filled star color */
+  color: #0cae3a;
+  /* Half-filled star color */
 }
 
 
@@ -152,6 +211,197 @@ body {
 
 /* Hide scrollbar for IE, Edge and Firefox */
 .hide-scrollbar {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+/* ===================navbar================== */
+.nav_logo {
+  @apply 2xl:w-[274px] 2xl:h-[70px] xl:w-[204px] xl:h-[50px] lg:w-[160px] lg:h-[30px]
+}
+
+.nav_login {
+  @apply alata font-[400] text-white 2xl:text-[24px] xl:text-[18px] lg:text-[12px] 2xl:leading-[33px]
+}
+
+.nav_signup {
+  @apply alata font-[400] text-[#F38181] bg-white 2xl:p-1 2xl:text-[24px] xl:text-[18px] xl:leading-[30px] lg:text-[12px] lg:leading-[20px] 2xl:leading-[36px] 2xl:w-[134px] 2xl:h-[48px] rounded-[5px] xl:px-2 lg:px-2
+}
+
+
+
+
+.footer_text {
+  @apply poppins font-[400] text-[#111111] 2xl:text-[16px] 2xl:leading-[30px] xl:text-[12px] xl:leading-[22px]
+  lg:text-[10px] lg:leading-[18px]
+}
+
+.footer_heading {
+  @apply poppins font-[600] text-[#111111] 2xl:text-[18px] 2xl:leading-[27px] 2xl:mb-8 xl:mb-5 xl:text-[14px] xl:leading-[23px]
+   lg:text-[12px] lg:leading-[18px] lg:mb-3
+}
+
+.footer_text_b {
+  @apply alata font-[400] text-[#111111] 2xl:text-[16px] 2xl:leading-[30px] xl:text-[12px] xl:leading-[22px]
+  lg:text-[12px] lg:leading-[18px]
+
+}
+
+/* ===================Third================== */
+
+.third_head {
+  @apply alata font-[400] 2xl:text-[55px] 2xl:leading-[75px] xl:text-[30px] xl:leading-[45px] lg:text-[20px] lg:leading-[30px]
+}
+
+.third_img {
+  @apply w-[32.33px] h-[22.89px] lg:w-[20px] lg:h-[20px]
+}
+
+.third_select {
+  @apply alata font-[400] rounded-[3px] 2xl:text-[16px] 2xl:leading-[20px] 2xl:h-[46px] bg-[#EBEBEB] 2xl:px-3 xl:text-[12px] xl:leading-[18px] xl:h-[30px] xl:px-2 lg:text-[10px] lg:leading-[16px] lg:h-[25px] lg:px-2
+}
+
+.third_input {
+  @apply alata font-[400] border-[1px] rounded-[3px] 2xl:text-[16px] 2xl:leading-[20px] 2xl:w-[215px] 2xl:h-[46px] 2xl:px-3 xl:text-[12px] xl:leading-[16px] xl:w-[160px] xl:h-[30px] lg:w-[150px] lg:h-[25px] px-1
+}
+
+/* ===================Four================== */
+
+.four_head {
+  @apply alata font-[400] 2xl:text-[55px] 2xl:leading-[75px] 2xl:my-8 mx-auto xl:text-[35px] xl:leading-[45px] xl:my-4 
+  lg:text-[25px] lg:leading-[30px] lg:my-2
+}
+
+.four_img {
+  @apply 2xl:w-[373px] 2xl:h-[300px] xl:w-[250px] xl:h-[200px] lg:w-[190px] lg:h-[160px]
+}
+
+.fourth_title {
+  @apply text-[#111111] alata font-[400] 2xl:text-[20px] 2xl:leading-[20px] xl:text-[14px] xl:leading-[18px]
+  lg:text-[12px] xl:leading-[18px]
+}
+
+.four_img2 {
+  @apply 2xl:w-[55px] 2xl:h-[55px] xl:w-[40px] xl:h-[40px] lg:w-[30px] lg:h-[30px]
+}
+
+.fourth_name {
+  @apply text-[#111111] alata font-[400] 2xl:text-[16px] 2xl:leading-[20px] xl:text-[12px] xl:leading-[18px]
+  lg:text-[10px] lg:leading-[16px]
+}
+
+.fourth_p {
+  @apply alata font-[400] 2xl:text-[16px] 2xl:leading-[24px] xl:text-[12px] xl:leading-[20px]
+  lg:text-[10px] lg:leading-[18px]
+}
+
+.four_btn {
+  @apply bg-[#FFD4D4] flex items-center rounded-full 2xl:px-[15px] 2xl:gap-2 2xl:mt-6 2xl:h-[31px] 2xl:text-[14px] 2xl:leading-[24px] xl:px-[15px] xl:gap-2 xl:mt-5 xl:h-[25px] xl:text-[12px] xl:leading-[18px]
+  lg:px-[10px] lg:gap-2 lg:mt-5 lg:h-[22px] lg:text-[10px] lg:leading-[16px]
+}
+
+.fourth_day {
+  @apply alata font-[400] 2xl:text-[14px] 2xl:leading-[24px]
+}
+
+/* ==================Five================== */
+.five_head {
+  @apply alata font-[400] 2xl:text-[55px] 2xl:leading-[75px] text-center mx-auto xl:text-[35px] xl:leading-[45px]
+}
+
+.five_p {
+  @apply alata font-[400] mx-auto text-center 2xl:text-[20px] 2xl:leading-[30px] 2xl:w-[850px] 2xl:my-3 xl:text-[14px] xl:leading-[22px] xl:w-[600px] xl:my-2 lg:text-[12px] lg:leading-[22px] lg:w-[600px] lg:my-2
+}
+
+.five_head {
+  @apply alata font-[400] 2xl:text-[25px] 2xl:leading-[30px] text-center 2xl:my-5 mx-auto xl:text-[16px] xl:leading-[25px] xl:my-3
+  lg:text-[12px] xl:leading-[20px] xl:my-2
+}
+
+.five_p2 {
+  @apply alata font-[400] 2xl:text-[18px] 2xl:leading-[28px] 2xl:my-1 text-center mx-auto xl:text-[14px] xl:leading-[20px]
+  lg:text-[12px] lg:leading-[20px]
+}
+
+/* =================Six================= */
+.six_head {
+  @apply alata font-[400] 2xl:text-[55px] 2xl:leading-[75px] xl:text-[35px] xl:leading-[45px] lg:text-[25px] lg:leading-[35px]
+}
+
+.six_img {
+  @apply 2xl:w-[327px] 2xl:h-[242px] xl:w-[210px] xl:h-[240px] lg:w-[160px] lg:h-[180px]
+}
+
+.six_p {
+  @apply alata font-[400] 2xl:text-[25px] 2xl:leading-[35px] 2xl:p-14 2xl:w-auto xl:text-[16px] xl:leading-[28px] xl:pl-6 xl:w-[260px]
+  lg:text-[12px] lg:leading-[20px] lg:pl-4 lg:w-[190px]
+}
+
+/* =================Seven================= */
+
+.seven_head {
+  @apply alata font-[400] 2xl:text-[55px] 2xl:leading-[75px] text-center xl:text-[35px] xl:leading-[45px]
+  lg:text-[25px] lg:leading-[30px]
+}
+
+.seven_p {
+  @apply alata font-[400] text-center mx-auto 2xl:text-[20px] 2xl:leading-[30px] 2xl:w-[854px] 2xl:my-3 xl:text-[14px] xl:leading-[20px] xl:w-[606px] lg:my-1  lg:text-[12px] lg:leading-[18px] lg:w-[505px]
+}
+
+.seven_img {
+  @apply 2xl:w-[286px] 2xl:h-[323px] xl:w-[200px] xl:h-[180px] lg:w-[200px] lg:h-[160px]
+}
+
+.seven_name {
+  @apply alata font-[400] 2xl:text-[20px] 2xl:leading-[20px] text-center 2xl:my-5 xl:text-[14px] xl:leading-[20px] lg:text-[12px] lg:leading-[18px] xl:my-0 lg:my-2
+}
+
+.seven_btn {
+  @apply alata font-[400] bg-[#DB5353] text-white mx-auto rounded-[5px] 2xl:w-[218px] 2xl:h-[60px] 2xl:text-[20px] 2xl:leading-[27.6px] xl:w-[160px] xl:h-[35px] xl:text-[14px] xl:leading-[25px] lg:w-[140px] lg:h-[30px] lg:text-[14px] lg:leading-[25px]
+}
+
+/* =================Eight================= */
+
+.eight_head {
+  @apply alata font-[400] 2xl:text-[55px] 2xl:leading-[75px] 2xl:my-8 xl:text-[35px] xl:leading-[45px] xl:my-4
+  lg:text-[25px] lg:leading-[30px] lg:my-3
+}
+
+.eight_p {
+  @apply alata font-[400] 2xl:text-[20px] 2xl:leading-[30px] 2xl:w-[646px] xl:text-[14px] xl:leading-[25px] xl:w-[446px]
+  lg:text-[12px] lg:leading-[20px] lg:w-[386px]
+}
+
+.eight_btn {
+  @apply alata font-[400] bg-[#DB5353] text-white mx-auto rounded-[5px] 2xl:w-[310px] 2xl:h-[60px] 2xl:text-[20px] 2xl:leading-[27.6px] 2xl:my-20 xl:w-[200px] xl:h-[35px] xl:text-[14px] xl:leading-[25px] xl:my-14
+  lg:w-[180px] lg:h-[30px] lg:text-[14px] lg:leading-[25px] lg:my-10
+}
+
+/* =================Nine================= */
+
+
+.nine_head {
+  @apply alata font-[400] 2xl:text-[55px] 2xl:leading-[75px] text-center xl:text-[35px] xl:leading-[45px]
+  lg:text-[25px] lg:leading-[30px]
+}
+
+.nine_p {
+  @apply alata font-[400] 2xl:text-[20px] 2xl:leading-[30px] text-center xl:text-[14px] xl:leading-[25px]
+  lg:text-[12px] lg:leading-[16px]
+}
+
+.nine_img {
+  @apply 2xl:w-[92px] 2xl:h-[92px] mx-auto xl:w-[55px] xl:h-[55px] lg:w-[50px] lg:h-[50px]
+}
+
+.nine_p2 {
+  @apply alata font-[400] text-center 2xl:w-[352px] 2xl:text-[18px] 2xl:leading-[28px] 2xl:my-5 xl:w-[280px] xl:text-[14px] xl:leading-[20px] xl:my-5
+  lg:w-[230px] lg:text-[12px] lg:leading-[18px] lg:my-4
+}
+
+.nine_name {
+  @apply alata font-[400] text-[#DB5353] 2xl:text-[18px] 2xl:leading-[28px] text-center xl:text-[14px] xl:leading-[20px]
+  lg:text-[12px] lg:leading-[18px]
 }
