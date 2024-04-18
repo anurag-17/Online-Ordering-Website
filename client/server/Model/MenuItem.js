@@ -12,15 +12,47 @@ const menuItemSchema = new mongoose.Schema(
     price: {
       type: Number,
     },
-    category: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Category"
+    weight:{
+      type:Number,
     },
-    chef: {
+    portion_Size:{
+      type:String,
+    },
+    Ingredients: {
+      type: String,
+    },
+
+    Heating_Instruction:{
+    type:String,
+    },
+
+    List_of_Ingredients:{
+      type:String,
+    },
+
+    Cuisines_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Cuisines"
+    },
+
+    Dishtype_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "DishType"
+    },
+
+    Dietary_id:{
+      type:mongoose.Schema.Types.ObjectId,
+      ref:'Dietary'
+    },
+    spice_level_id:{
+      type:mongoose.Schema.Types.ObjectId,
+      ref:'SpiceLevel'
+    },
+    chef_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Chef",
     },
-    image: {
+    ProfileImage: {
       type: String,
     },
   },

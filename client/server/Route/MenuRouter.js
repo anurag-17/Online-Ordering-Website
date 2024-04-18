@@ -6,11 +6,12 @@ const {
     getMenuItemById,
     updateMenuItemById,
     deleteMenuItemById,
+    upload
 } = require("../Controller/menu");
 const { isAuthenticatedUser, authorizeRoles } = require("../middleware/auth");
 
 // Create a new menu item
-router.route("/menuItems").post(createMenuItem);
+router.post("/menuItems",  upload, createMenuItem);
 
 // Get all menu item
 router.route("/menuItems").get(getAllMenuItems);

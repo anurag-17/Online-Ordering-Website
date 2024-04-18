@@ -17,7 +17,6 @@ AWS.config.update({
 });
 
 
-
 // Create an S3 service object
 const s3 = new AWS.S3();
 
