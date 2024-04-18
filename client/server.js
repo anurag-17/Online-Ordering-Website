@@ -7,15 +7,15 @@ require('dotenv').config();
 const dev = process.env.NODEENV !== 'production';
 const app = next({ dev });
 const handle = app.getRequestHandler();
-const connectDB = require("./server/Utils/db") 
+const connectDB = require("./server/Utils/db")
 // console.log(process.env);
 const apiRoutes = require("./server/Route/AuthRouter")
 
 const corsOptions = {
   origin: [
-  "http://localhost:3000",
-  "*"
-],
+    "http://localhost:3000",
+    "*"
+  ],
   credentials: true,
 };
 
@@ -26,12 +26,15 @@ app.prepare().then(() => {
   server.use(bodyParser.urlencoded({ extended: true }));
   // server.use(cors());
   server.use(cors(corsOptions));
-connectDB();
+  connectDB();
   // Express routes here
   server.use('/api/auth', require("./server/Route/AuthRouter"));
   server.use('/api/chef', require("./server/Route/ChefRouter"));
   server.use('/api/menu', require("./server/Route/MenuRouter"));
   server.use('/api/category', require("./server/Route/CategoryRouter"));
+  server.use('/api/dietary', require("./server/Route/dietaryRouter"));
+  server.use('/api/DishType', require("./server/Route/DishTypeRouter"));
+  server.use('/api/SpiceLevel', require("./server/Route/SpiceRouter"));
 
   // Next.js request handling
   server.get('*', (req, res) => {

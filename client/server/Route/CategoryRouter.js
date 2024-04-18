@@ -6,12 +6,13 @@ const {
   getCategoryById,
   deleteCategoryById,
   updateCategoryById,
+  upload
 } = require("../Controller/category");
 const { isAuthenticatedUser, authorizeRoles } = require("../middleware/auth");
 
 // Create a new category
-router.route("/categories").post(createCategory);
 
+router.post("/categories", upload, createCategory);
 // Get all categories
 router.route("/categories").get(getAllCategories);
 

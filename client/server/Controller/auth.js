@@ -6,6 +6,7 @@ const sendToken = require("../Utils/jwtToken");
 const jwt = require("jsonwebtoken");
 const uploadOnS3 = require("../Utils/uploadImage");
 const Chef = require("../Model/Chef");
+const crypto = require("crypto");
 
 exports.uploadImage = async (req, res, next) => {
   try {
@@ -23,38 +24,50 @@ exports.uploadImage = async (req, res, next) => {
     return res.status(500).json({ error: "Internal server error" });
   }
 };
-
 exports.register = async (req, res, next) => {
   const { email, password } = req.body;
 
-  const existingUser = await User.findOne({ email });
-
-  if (existingUser) {
-    return res.status(203).json({ error: "User with this email already exists." });
-  }
-
-  const userData = {
-    email,
-    provider_ID: req.body.provider_ID,
-    firstname: req.body.firstname,
-    lastname: req.body.lastname,
-    provider: req.body.provider,
-    role: req.body.role
-  };
-
-  if (password) {
-    // const salt = await bcrypt.genSalt(10);
-    // const hashedPassword = await bcrypt.hash(password, salt);
-    userData.password = password;
-  }
-
   try {
+    // Check if user with the provided email already exists
+    const existingUser = await User.findOne({ email });
+
+    if (existingUser) {
+      return res.status(203).json({ error: "User with this email already exists." });
+    }
+
+    // Generate reset password token and set expiry
+    const resetToken = generateResetPasswordToken();
+    const passwordResetExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes from now
+
+    const userData = {
+      email,
+      provider_ID: req.body.provider_ID,
+      firstname: req.body.firstname,
+      lastname: req.body.lastname,
+      provider: req.body.provider,
+      role: req.body.role,
+      passwordResetToken: resetToken,
+      passwordResetExpires: passwordResetExpires
+    };
+
+    if (password) {
+      userData.password = password;
+    }
+
+    // Create the new user
     const newUser = await User.create(userData);
+    // Send response with token
     sendToken(newUser, 201, res);
   } catch (error) {
     next(error);
   }
 };
+
+// Function to generate reset password token
+const generateResetPasswordToken = () => {
+  return crypto.randomBytes(20).toString("hex");
+};
+
 
 exports.login = async (req, res, next) => {
   const { email, password } = req.body;
@@ -65,6 +78,7 @@ exports.login = async (req, res, next) => {
 
   try {
     const findUser = await User.findOne({ email }).select("+password");
+    console.log("Find User");
 
     // If user exists and is authenticated via a third-party provider
     if (findUser && !findUser.password) {
@@ -83,6 +97,7 @@ exports.login = async (req, res, next) => {
           firstname: findUser.firstname,
           lastname: findUser.lastname,
           email: findUser.email,
+          passwordChangedAt: findUser.passwordChangedAt,
         //   provider: findUser.provider,
         },
         token: token,
@@ -180,6 +195,7 @@ exports.chefLogin = async (req, res, next) => {
     }
 
     if (await findAdmin.matchPasswords(password)) {
+      
       const token = generateToken({ id: findAdmin._id });
       await Chef.findByIdAndUpdate(
         { _id: findAdmin._id?.toString() },
@@ -211,6 +227,8 @@ exports.chefLogin = async (req, res, next) => {
     });
   }
 };
+
+
 
 exports.chefLogout = async (req, res) => {
   try {
@@ -308,6 +326,8 @@ exports.logout = async (req, res) => {
 };
 
 exports.forgotPassword = async (req, res, next) => {
+
+  console.log("Forget Pass")
   const { email } = req.body;
 
   try {
@@ -317,6 +337,8 @@ exports.forgotPassword = async (req, res, next) => {
       return res.status(401).json(`${email} this email is not registered`);
     }
     const resetToken = user.getResetPasswordToken();
+  
+
     await user.save();
 
     const resetUrl = `http://localhost:4000/auth/reset-password/${resetToken}`;
@@ -411,29 +433,41 @@ exports.forgotPassword = async (req, res, next) => {
 
 exports.resetPassword = async (req, res, next) => {
   try {
+    const { resetToken } = req.params;
+    const { password } = req.body;
+
+    // Find user by reset token and ensure it's not expired
+
     const user = await User.findOne({
-      passwordResetToken: req.params.resetToken,
+      passwordResetToken: resetToken,
       passwordResetExpires: { $gt: Date.now() },
     });
-    
+
+    console.log("User", user);
+
+    // If user not found or token expired, return error
     if (!user) {
-      res.status(400).json("Invalid Reset Token");
-      
+      return res.status(400).json({ error: 'Invalid or expired reset token' });
     }
-    user.password = req.body.password;
+
+    // Update user's password and reset token fields
+    user.password = password;
     user.passwordResetToken = undefined;
     user.passwordResetExpires = undefined;
 
+    // Save user's updated information
     await user.save();
-    res.status(201).json({
+
+    // Send success response
+    return res.status(201).json({
       success: true,
-      data: "Password Reset Successfully",
+      message: 'Password reset successfully',
     });
   } catch (error) {
-    next(error);
+    // Pass error to the error handling middleware
+    return next(error);
   }
 };
-
 exports.verifyUser = async (req, res) => {
   const {token } = req.params;
 
@@ -522,6 +556,8 @@ exports.getallUser = async (req, res) => {
   }
 };
 
+
+
 exports.getaUser = async (req, res) => {
   const { _id } = req.user;
   validateMongoDbId(_id);
@@ -568,12 +604,11 @@ exports.updatePassword = async (req, res) => {
   try {
     const { oldPassword, newPassword } = req.body;
     const { _id } = req.user._id;
-
     const user = await User.findById(_id).select("+password");
     // Verify the current password
     const isPasswordMatch = await user.matchPasswords(oldPassword);
     if (!isPasswordMatch) {
-      return res.status(203).json({ message: "Current password is incorrect" });
+      return res.status(400).json({ message: "Current password is incorrect" });
     }
 
     user.password = newPassword;

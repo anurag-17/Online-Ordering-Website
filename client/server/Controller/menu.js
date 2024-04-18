@@ -10,6 +10,7 @@ exports.createMenuItem = async (req, res, next) => {
   }
 };
 
+
 // Get all menu items 
 exports.getAllMenuItems = async (req, res, next) => {
   try {
