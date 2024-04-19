@@ -6,11 +6,12 @@ const {
   getChefById,
   deleteChefById,
   updateChefById,
+  upload
 } = require("../Controller/chef");
 const { isAuthenticatedUser, authorizeRoles } = require("../middleware/auth");
 
 // Create a new chef
-router.route("/chefs").post(createChef);
+router.post("/chefs", upload, createChef);
 
 // Get all chefs
 router.route("/chefs").get(getAllChefs);
@@ -19,7 +20,9 @@ router.route("/chefs").get(getAllChefs);
 router.route("/chefs/:id").get(getChefById);
 
 // Update a chef by ID
-router.route("/chefs/:id").put(updateChefById);
+// router.route("/chefs/:id").put(updateChefById);
+
+router.put("/chefs/:id", upload, updateChefById);
 
 // Delete a chef by ID
 router.route("/chefs/:id").delete(deleteChefById);

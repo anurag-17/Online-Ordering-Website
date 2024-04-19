@@ -9,8 +9,6 @@ const dotenv = require('dotenv')
 dotenv.config()
 // Create a new spice level with Uplaod ProfileImage on aws -sdk
 
-
-// Configure the AWS region
 // Configure the AWS region
 AWS.config.update({
     accessKeyId: process.env.AWS_ACCESS_KEY,
