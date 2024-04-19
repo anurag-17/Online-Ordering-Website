@@ -100,13 +100,13 @@ exports.getAllCategories = async (req, res, next) => {
     const totalPages = Math.ceil(totalItems / itemsPerPage);
 
     const skip = (currentPage - 1) * itemsPerPage;
-    const Cuisens = await categoryQuery.skip(skip).limit(itemsPerPage);
+    const cuisines = await categoryQuery.skip(skip).limit(itemsPerPage);
 
     res.json({
       totalItems,
       totalPages,
       currentPage,
-      Cuisens,
+      cuisines,
     });
   } catch (error) {
     next(error);
