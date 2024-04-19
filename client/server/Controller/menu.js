@@ -3,6 +3,7 @@ const validateMongoDbId = require("../Utils/validateMongodbId");
 const AWS = require("aws-sdk");
 const fs = require("fs");
 const path = require("path");
+const mongoose = require("mongoose");
 const multer = require('multer');
 const dotenv = require('dotenv')
 dotenv.config()
@@ -226,3 +227,35 @@ exports.deleteMenuItemById = async (req, res, next) => {
     next(error);
   }
 };
+
+
+exports.getMenuItemByParams = async (req, res, next) => {
+  const { Cuisines_id, Dishtype_id, Dietary_id, spice_level_id } = req.query;
+
+  try {
+    // Construct query object based on provided parameters
+    const query = {};
+    if (Cuisines_id) query.Cuisines_id = Cuisines_id;
+    if (Dishtype_id) query.Dishtype_id = Dishtype_id;
+    if (Dietary_id) query.Dietary_id = Dietary_id;
+    if (spice_level_id) query.spice_level_id = spice_level_id;
+
+    // Find documents matching the query
+    const menuItem = await MenuItem.find(query)
+      .populate('Cuisines_id')
+      .populate('Dishtype_id')
+      .populate('Dietary_id')
+      .populate('spice_level_id')
+      .populate('chef_id')
+      .exec();
+
+    // Count the number of documents matching the query
+    const count = menuItem.length;
+    res.status(200).json({ count, menuItem });
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+

@@ -6,6 +6,7 @@ const {
     getMenuItemById,
     updateMenuItemById,
     deleteMenuItemById,
+    getMenuItemByParams,
     upload
 } = require("../Controller/menu");
 const { isAuthenticatedUser, authorizeRoles } = require("../middleware/auth");
@@ -24,5 +25,8 @@ router.route("/menuItems/:id").put(updateMenuItemById);
 
 // Delete a menu item by ID
 router.route("/menuItems/:id").delete(deleteMenuItemById);
+
+// Sorted menue
+router.get("/menuItem/sort", getMenuItemByParams)
 
 module.exports = router;
