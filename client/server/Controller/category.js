@@ -100,13 +100,13 @@ exports.getAllCategories = async (req, res, next) => {
     const totalPages = Math.ceil(totalItems / itemsPerPage);
 
     const skip = (currentPage - 1) * itemsPerPage;
-    const categories = await categoryQuery.skip(skip).limit(itemsPerPage);
+    const Cuisens = await categoryQuery.skip(skip).limit(itemsPerPage);
 
     res.json({
       totalItems,
       totalPages,
       currentPage,
-      categories,
+      Cuisens,
     });
   } catch (error) {
     next(error);
@@ -121,7 +121,7 @@ exports.getCategoryById = async (req, res, next) => {
   try {
     const category = await Category.findById(id);
     if (!category) {
-      return res.status(404).json({ error: "Category not found" });
+      return res.status(404).json({ error: "Cuisens not found" });
     }
     res.json(category);
   } catch (error) {
@@ -137,7 +137,7 @@ exports.updateCategoryById = async (req, res, next) => {
   try {
     const category = await Category.findByIdAndUpdate(id, req.body, { new: true });
     if (!category) {
-      return res.status(404).json({ error: "Category not found" });
+      return res.status(404).json({ error: "Cuisens not found" });
     }
     res.json(category);
   } catch (error) {
@@ -153,9 +153,9 @@ exports.deleteCategoryById = async (req, res, next) => {
   try {
     const category = await Category.findByIdAndDelete(id);
     if (!category) {
-      return res.status(404).json({ error: "Category not found" });
+      return res.status(404).json({ error: "Cuisens not found" });
     }
-    res.json({ message: "Category deleted successfully" });
+    res.json({ message: "Cuisens deleted successfully" });
   } catch (error) {
     next(error);
   }
