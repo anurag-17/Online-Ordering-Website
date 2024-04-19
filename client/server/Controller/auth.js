@@ -24,6 +24,9 @@ exports.uploadImage = async (req, res, next) => {
     return res.status(500).json({ error: "Internal server error" });
   }
 };
+
+
+
 exports.register = async (req, res, next) => {
   const { email, password } = req.body;
 
@@ -337,6 +340,7 @@ exports.forgotPassword = async (req, res, next) => {
       return res.status(401).json(`${email} this email is not registered`);
     }
     const resetToken = user.getResetPasswordToken();
+    
   
 
     await user.save();

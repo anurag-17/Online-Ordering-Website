@@ -182,7 +182,7 @@ exports.getMenuItemById = async (req, res, next) => {
   const { id } = req.params;
 
   try {
-    const menuItem = await MenuItem.findById(id).populate("chef").populate("category");
+    const menuItem = await MenuItem.findById(id).populate("chef_id").populate("Cuisines_id").populate("Dishtype_id").populate("Dietary_id").populate("spice_level_id");
     if (!menuItem) {
       return res.status(404).json({ error: 'Menu item not found' });
     }

@@ -31,7 +31,7 @@ app.prepare().then(() => {
   server.use('/api/auth', require("./server/Route/AuthRouter"));
   server.use('/api/chef', require("./server/Route/ChefRouter"));
   server.use('/api/menu', require("./server/Route/MenuRouter"));
-  server.use('/api/category', require("./server/Route/CategoryRouter"));
+  server.use('/api/cuisines', require("./server/Route/CategoryRouter"));
   server.use('/api/dietary', require("./server/Route/dietaryRouter"));
   server.use('/api/DishType', require("./server/Route/DishTypeRouter"));
   server.use('/api/SpiceLevel', require("./server/Route/SpiceRouter"));

@@ -12,17 +12,17 @@ const { isAuthenticatedUser, authorizeRoles } = require("../middleware/auth");
 
 // Create a new category
 
-router.post("/categories", upload, createCategory);
+router.post("/Createcuisines", upload, createCategory);
 // Get all categories
-router.route("/categories").get(getAllCategories);
+router.route("/getAllCuisines").get(getAllCategories);
 
 // Get a single category by ID
-router.route("/categories/:id").get(getCategoryById);
+router.route("/getCuisinesById/:id").get(getCategoryById);
 
 // Update a category by ID
-router.route("/categories/:id").put(updateCategoryById);
+router.route("/updateCuisines/:id").put(updateCategoryById);
 
 // Delete a category by ID
-router.route("/categories/:id").delete(deleteCategoryById);
+router.route("/deleteCuisines/:id").delete(deleteCategoryById);
 
 module.exports = router;

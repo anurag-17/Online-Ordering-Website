@@ -140,23 +140,83 @@ exports.getDietaryById = async (req, res, next) => {
     }
 }
 
-// Update a dietary by ID
-
+// Update a Dietary by ID
 exports.updateDietaryById = async (req, res, next) => {
-    const{id}=req.params;
-    validateMongoDbId(id)
-    try{
-        const dietary = await Dietary.findByIdAndUpdate(id, req.body)
-        if(!dietary){
-            return res.status(404).json({error:"Dietary not found"})
+    const { id } = req.params;
+    validateMongoDbId(id);
+  
+    try {
+        const dietary = await Dietary.findById(id);
+        if (!dietary) {
+            return res.status(404).json({ error: "Dietary not found" });
         }
-       res.status(200).json({message:"Dietary updated successfully", dietary})
-    }
-    catch(error){
-        next(error)
-    }
-}
+  
+        // Update dietary details
+        const updatedDietary = await Dietary.findByIdAndUpdate(id, req.body, { new: true });
+  
+        // Delete old images from S3 bucket
+        await deleteImagesFromS3(dietary.ProfileImage);
+  
+        // Upload new images to S3 bucket
+        let profileImages = req.file; // Change const to let for reassignment
+        // Ensure profileImages is always an array
+        if (!Array.isArray(profileImages)) {
+            profileImages = [profileImages];
+        }
 
+        if (!profileImages || profileImages.length === 0) {
+            return res.status(400).json({ error: 'No images uploaded' });
+        }
+  
+        const imageUrls = [];
+        for (let i = 0; i < profileImages.length; i++) {
+            const image = profileImages[i];
+            const bucketName = process.env.BUCKET;
+            const uploadParams = {
+                Bucket: bucketName,
+                Key: `profile-images/${req.body.title}-${Date.now()}-${i}`,
+                Body: image.buffer,
+                ContentType: image.mimetype
+            };
+  
+            const data = await s3.upload(uploadParams).promise();
+            imageUrls.push(data.Location);
+        }
+  
+       // Convert array of image URLs into a single string
+       const profileImageString = imageUrls.join(', ');
+  
+       // Update dietary with new images
+       updatedDietary.ProfileImage = profileImageString;
+       await updatedDietary.save();
+  
+        res.status(200).json({ message: 'Dietary updated successfully', updatedDietary });
+    } catch (error) {
+        next(error);
+    }
+};
+
+const deleteImagesFromS3 = async (imageUrls) => {
+    try {
+      if (!Array.isArray(imageUrls)) {
+        // If imageUrls is not an array, convert it to an array with a single element
+        imageUrls = [imageUrls];
+      }
+  
+      const promises = imageUrls.map(async (imageUrl) => {
+        const key = imageUrl.split('/').pop();
+        const params = {
+          Bucket: process.env.BUCKET,
+          Key: key
+        };
+        await s3.deleteObject(params).promise();
+      });
+      await Promise.all(promises);
+    } catch (error) {
+      console.error("Error deleting images from S3:", error);
+      throw error;
+    }
+};
 // Delete a dietary by ID
 
 exports.deleteDietaryById = async (req, res, next) => {
