@@ -85,7 +85,7 @@ exports.createCategory = async (req, res, next) => {
 // Get all categories with pagination and search filter
 exports.getAllCategories = async (req, res, next) => {
   try {
-    const { page = 1, limit = 10, search } = req.query;
+    const { page = 1, limit = 50, search } = req.query;
 
     const currentPage = parseInt(page, 10);
     const itemsPerPage = parseInt(limit, 10);

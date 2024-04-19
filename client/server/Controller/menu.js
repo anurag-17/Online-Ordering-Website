@@ -142,10 +142,11 @@ exports.createMenuItem = async (req, res, next) => {
 }
 
 
+
 // Get all menu items 
 exports.getAllMenuItems = async (req, res, next) => {
   try {
-    const { page = 1, limit = 10, search } = req.query;
+    const { page = 1, limit = 50, search } = req.query;
 
     const currentPage = parseInt(page, 10);
     const itemsPerPage = parseInt(limit, 10);
@@ -176,6 +177,10 @@ exports.getAllMenuItems = async (req, res, next) => {
     next(error);
   }
 };
+
+// Get 
+
+
 
 // Get a single menu item by ID
 exports.getMenuItemById = async (req, res, next) => {
