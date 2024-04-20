@@ -155,6 +155,7 @@ exports.updateDietaryById = async (req, res, next) => {
         const updatedDietary = await Dietary.findByIdAndUpdate(id, req.body, { new: true });
   
         // Delete old images from S3 bucket
+        if(req.file){
         await deleteImagesFromS3(dietary.ProfileImage);
   
         // Upload new images to S3 bucket
@@ -189,6 +190,7 @@ exports.updateDietaryById = async (req, res, next) => {
        // Update dietary with new images
        updatedDietary.ProfileImage = profileImageString;
        await updatedDietary.save();
+    }
   
         res.status(200).json({ message: 'Dietary updated successfully', updatedDietary });
     } catch (error) {
@@ -217,6 +219,8 @@ const deleteImagesFromS3 = async (imageUrls) => {
       throw error;
     }
 };
+
+
 // Delete a dietary by ID
 
 exports.deleteDietaryById = async (req, res, next) => {

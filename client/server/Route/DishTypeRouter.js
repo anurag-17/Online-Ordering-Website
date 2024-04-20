@@ -25,7 +25,7 @@ router.route("/dishTypes/:id").get(getDishTypeById); // GET /dishTypes/:id
 
 // Update a dish type by ID
 
-router.route("/dishTypes/:id").put(updateDishTypeById); // PUT /dishTypes/:id
+router.put("/dishTypes/:id", upload, updateDishTypeById); // PUT /dishTypes/:id
 
 // Delete a dish type by ID
 

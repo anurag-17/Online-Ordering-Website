@@ -130,56 +130,78 @@ module.exports.getSpiceLevelById = async (req, res, next) => {
 
 
 // Update a spice level by ID
-
 exports.updateSpiceLevelById = async (req, res, next) => {
     const { id } = req.params;
-    // Ensure id is a valid MongoDB ObjectId
     validateMongoDbId(id);
-
     try {
-        // Call multer middleware to handle file upload
-        upload(req, res, async (error) => {
+        const spice = await SpiceLevel.findById(id);
+        if (!spice) {
+            return res.status(404).json({ error: "Spice level not found" });
+        }
+         // Update dietary details
+         const updatedFields = req.body;
+        const updatedSpice = await SpiceLevel.findByIdAndUpdate(id, updatedFields, { new: true });
 
-            // Access the uploaded file from req.file
-            const ProfileImage = req.file;
-            if (!ProfileImage) {
+        if (req.file) {
+            // Delete old images from S3 bucket
+            await deleteImagesFromS3(spice.ProfileImage);
+            // Upload new images to S3 bucket
+            let profileImages = req.file;
+            if (!Array.isArray(profileImages)) {
+                profileImages = [profileImages];
+            }
+            if (!profileImages || profileImages.length === 0) {
                 return res.status(400).json({ error: "Please upload an image" });
             }
 
-            // Ensure that ProfileImage.buffer is accessible
-            if (!ProfileImage.buffer || ProfileImage.buffer.length === 0) {
-                return res.status(400).json({ error: 'Uploaded file buffer is empty or undefined' });
+            const imageUrls = [];
+            for (let i = 0; i < profileImages.length; i++) {
+                const image = profileImages[i];
+                const bucketName = process.env.BUCKET;
+                const uploadParams = {
+                    Bucket: bucketName,
+                    Key: `profile-images/${req.body.title || spice.title}-${Date.now()}`,
+                    Body: image.buffer,
+                    ContentType: image.mimetype
+                };
+                const data = await s3.upload(uploadParams).promise();
+                imageUrls.push(data.Location);
             }
-
-            // Upload new image to AWS S3
-            const bucketName = 'authimages'; // Update with your S3 bucket name
-            const uploadParams = {
-                Bucket: bucketName,
-                Key: `profile-images/${id}-${Date.now()}`,
-                Body: ProfileImage.buffer,
-                ContentType: ProfileImage.mimetype
-            };
-            const s3UploadResponse = await s3.upload(uploadParams).promise();
-            const newImageUrl = s3UploadResponse.Location;
-
-            // Find and update the spice level in the database
-            const updatedSpice = await SpiceLevel.findByIdAndUpdate(id, {
-                ...req.body, // Update other properties if provided
-                ProfileImage: newImageUrl // Update the image URL
-            }, { new: true });
-
-            // Check if spice level was found
-            if (!updatedSpice) {
-                return res.status(404).json({ error: "Spice level not found" });
-            }
-
-            // Send response with the updated spice level
-            res.status(200).json({ message: "Spice level updated successfully", spice: updatedSpice });
-        });
-    } catch (error) {
+            const profileImageString = imageUrls.join(",");
+            updatedSpice.ProfileImage = profileImageString;
+            await updatedSpice.save();
+        }
+        res.status(200).json({ message: "Spice level updated successfully", updatedSpice });
+    } 
+    catch (error) {
         next(error);
     }
 };
+
+
+// Delete Bucket from s3
+
+const deleteImagesFromS3=async(imageUrls)=>{
+    const imageUrlsArray=imageUrls.split(',');
+    try{
+        const promises=imageUrlsArray.map(async(imageUrl)=>{
+      const key=imageUrl.split('/').pop();
+      const params={
+          Bucket:process.env.BUCKET,
+          Key:key
+      };
+        await s3.deleteObject(params).promise();
+
+        })
+        await Promise.all(promises);
+
+    }catch(error){
+        console.error("Error deleting images from S3:", error);
+        throw error;
+
+    }
+
+}
 
 // Delete a spice level by ID
 

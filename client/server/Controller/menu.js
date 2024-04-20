@@ -38,51 +38,6 @@ exports.upload = upload;
 // Export the upload middleware
 exports.upload = upload;
 
-// exports.createDishType = async (req, res, next) => {
-//     try {
-//         const { title } = req.body;
-
-//         // Call multer middleware to handle file upload
-//         upload(req, res, async (error) => {
-//             // Access the uploaded file from req.file
-//             const ProfileImage = req.file;
-//             if (!ProfileImage) {
-//                 return res.status(400).json({ error: "Please upload an image" });
-//             }
-
-//             // Ensure that ProfileImage.buffer is accessible
-//             if (!ProfileImage.buffer || ProfileImage.buffer.length === 0) {
-//                 return res.status(400).json({ error: 'Uploaded file buffer is empty or undefined' });
-//             }
-
-//             // Upload image to S3
-//             const bucketName = process.env.BUCKET;
-//             const uploadParams = {
-//                 Bucket: bucketName,
-//                 Key: `profile-images/${title}-${Date.now()}`,
-//                 Body: ProfileImage.buffer,
-//                 ContentType: ProfileImage.mimetype
-//             };
-//             const s3UploadResponse = await s3.upload(uploadParams).promise();
-//             console.log(s3UploadResponse.Location);
-//             const imageUrl = s3UploadResponse.Location;
-
-//             // Create a new dietary with the image URL
-//             const DishTypes = new DishType({
-//                 title: title,
-//                 ProfileImage: imageUrl
-//             });
-//             // Save the dietary to the database
-//             const Dish = await DishTypes.save();
-//             // Send response with the created dietary
-//             res.status(201).json(Dish);
-//         });
-//     } catch (error) {
-//         next(error);
-//     }
-// };
-
-
 // Create a new menu item
 
 exports.createMenuItem = async (req, res, next) => {
@@ -201,15 +156,76 @@ exports.getMenuItemById = async (req, res, next) => {
 // Update a menu item by ID
 exports.updateMenuItemById = async (req, res, next) => {
   const { id } = req.params;
+  validateMongoDbId(id);
 
   try {
-    const menuItem = await MenuItem.findByIdAndUpdate(id, req.body, { new: true });
-    if (!menuItem) {
-      return res.status(404).json({ error: 'Menu item not found' });
-    }
-    res.json(menuItem);
+      const menuItem = await MenuItem.findById(id);
+      if (!menuItem) {
+          return res.status(404).json({ error: 'Menu item not found' });
+      }
+
+      // Update menu item details
+      const updatedMenuItem = await MenuItem.findByIdAndUpdate(id, req.body, { new: true });
+      console.log(req.body);
+      console.log(updatedMenuItem);
+
+      if (req.file) {
+          // Delete old images from S3 bucket
+          await deleteImagesFromS3(menuItem.ProfileImage);
+
+          let profileImages = req.file;
+          if (!Array.isArray(profileImages)) {
+              profileImages = [profileImages];
+          }
+
+          if (!profileImages || profileImages.length === 0) {
+              return res.status(400).json({ error: 'Please upload an image' });
+          }
+
+          const imageUrls = [];
+          for (let i = 0; i < profileImages.length; i++) {
+              const image = profileImages[i];
+              const bucketName = process.env.BUCKET;
+              const uploadParams = {
+                  Bucket: bucketName,
+                  Key: `profile-images/${req.body.title || menuItem.title}-${Date.now()}-${i}`,
+                  Body: image.buffer,
+                  ContentType: image.mimetype
+              };
+
+              const data = await s3.upload(uploadParams).promise();
+              imageUrls.push(data.Location);
+          }
+
+          // Convert array of image URLs into a single string
+          const profileImageString = imageUrls.join(', ');
+
+          // Update menu item with new images
+          updatedMenuItem.ProfileImage = profileImageString;
+          await updatedMenuItem.save();
+      }
+
+      res.status(200).json({ message: 'Menu item updated successfully', updatedMenuItem });
   } catch (error) {
-    next(error);
+      next(error);
+  }
+};
+
+// Helper function to delete images from S3 bucket
+const deleteImagesFromS3 = async (imageUrls) => {
+  try {
+    const promises = imageUrls.map(async (imageUrl) => {
+      const key = imageUrl.split('/').pop();
+      const params = {
+        Bucket: process.env.BUCKET,
+        Key: key
+      };
+      await s3.deleteObject(params).promise();
+    });
+    await Promise.all(promises);
+  } catch (error) {
+    console.error("Error deleting images from S3:", error);
+    throw error;
   }
 };
 

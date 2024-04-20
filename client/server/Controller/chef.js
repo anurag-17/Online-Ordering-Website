@@ -147,6 +147,7 @@ exports.updateChefById = async (req, res, next) => {
       // Update chef details
       const updatedChef = await Chef.findByIdAndUpdate(id, req.body, { new: true });
 
+      if(req.files){
       // Delete old images from S3 bucket
       await deleteImagesFromS3(chef.images);
 
@@ -174,6 +175,7 @@ exports.updateChefById = async (req, res, next) => {
       // Update chef with new images
       updatedChef.images = imageUrls;
       await updatedChef.save();
+    }
 
       res.status(200).json({ message: 'Chef updated successfully', updatedChef });
   } catch (error) {

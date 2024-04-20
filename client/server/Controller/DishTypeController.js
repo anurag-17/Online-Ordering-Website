@@ -133,20 +133,101 @@ exports.getDishTypeById = async (req, res, next) => {
 
 // Update a dish type by ID
 
+// exports.updateDishTypeById = async (req, res, next) => {
+//     const { id } = req.params;
+//     validateMongoDbId(id); // Assuming validateMongoDbId is a function to validate MongoDB ObjectId
+    
+//     try {
+//         const dishType = await DishType.findByIdAndUpdate(id, req.body, { new: true });
+//         if (!dishType) {
+//             return res.status(404).json({ error: "Dish type not found" });
+//         }
+//         res.status(200).json({ message: "Dish type updated successfully", dishType });
+//     } catch (error) {
+//         next(error);
+//     }
+// }
+
+
+// Update a Dietary by ID
 exports.updateDishTypeById = async (req, res, next) => {
     const { id } = req.params;
-    validateMongoDbId(id); // Assuming validateMongoDbId is a function to validate MongoDB ObjectId
-    
+    validateMongoDbId(id);
+
     try {
-        const dishType = await DishType.findByIdAndUpdate(id, req.body, { new: true });
-        if (!dishType) {
-            return res.status(404).json({ error: "Dish type not found" });
+        const dishtype = await DishType.findById(id);
+        if (!dishtype) {
+            return res.status(404).json({ error: "dishtype not found" });
         }
-        res.status(200).json({ message: "Dish type updated successfully", dishType });
+
+        // Update dietary details
+        const updatedFields = req.body;
+        const updateddishtype = await DishType.findByIdAndUpdate(id, updatedFields, { new: true });
+
+        // Check if req.file exists and has expected properties (for image upload)
+        if (req.file) {
+            // Delete old images from S3 bucket
+            await deleteImagesFromS3(dishtype.ProfileImage);
+
+            // Upload new images to S3 bucket
+            let profileImages = req.file; // Change const to let for reassignment
+
+            // Ensure profileImages is always an array
+            if (!Array.isArray(profileImages)) {
+                profileImages = [profileImages];
+            }
+
+            const imageUrls = [];
+            for (let i = 0; i < profileImages.length; i++) {
+                const image = profileImages[i];
+                const bucketName = process.env.BUCKET;
+                const uploadParams = {
+                    Bucket: bucketName,
+                    Key: `profile-images/${req.body.title || dishtype.title}-${Date.now()}-${i}`,
+                    Body: image.buffer,
+                    ContentType: image.mimetype
+                };
+
+                const data = await s3.upload(uploadParams).promise();
+                imageUrls.push(data.Location);
+            }
+
+            // Convert array of image URLs into a single string
+            const profileImageString = imageUrls.join(', ');
+
+            // Update dietary with new images
+            updateddishtype.ProfileImage = profileImageString;
+            await updateddishtype.save();
+        }
+
+        res.status(200).json({ message: 'DishType updated successfully', updateddishtype });
     } catch (error) {
         next(error);
     }
-}
+};
+
+
+const deleteImagesFromS3 = async (imageUrls) => {
+    try {
+      if (!Array.isArray(imageUrls)) {
+        // If imageUrls is not an array, convert it to an array with a single element
+        imageUrls = [imageUrls];
+      }
+  
+      const promises = imageUrls.map(async (imageUrl) => {
+        const key = imageUrl.split('/').pop();
+        const params = {
+          Bucket: process.env.BUCKET,
+          Key: key
+        };
+        await s3.deleteObject(params).promise();
+      });
+      await Promise.all(promises);
+    } catch (error) {
+      console.error("Error deleting images from S3:", error);
+      throw error;
+    }
+};
 
 
 // Delete a dish type by ID

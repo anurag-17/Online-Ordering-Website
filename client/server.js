@@ -35,6 +35,7 @@ app.prepare().then(() => {
   server.use('/api/dietary', require("./server/Route/dietaryRouter"));
   server.use('/api/DishType', require("./server/Route/DishTypeRouter"));
   server.use('/api/SpiceLevel', require("./server/Route/SpiceRouter"));
+  server.use('/api/Orders', require("./server/Route/OrderRoutes"));
 
   // Next.js request handling
   server.get('*', (req, res) => {

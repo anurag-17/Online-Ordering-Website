@@ -25,11 +25,13 @@ const orderSchema = new mongoose.Schema({
     enum: ["pending", "preparing", "ready", "delivered"],
     default: "pending",
   },
+  
   orderDate: {
     type: Date,
     default: Date.now,
   },
   deliveryDate: Date,
+
   totalAmount: {
     type: Number,
   }
