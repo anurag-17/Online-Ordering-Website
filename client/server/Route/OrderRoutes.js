@@ -1,14 +1,15 @@
 const express=require('express')
 const { isAuthenticatedUser, authorizeRoles ,isAuthenticatedUserForAddtocard} = require('../middleware/auth')
-const { addToCart, getCartItems, updateCartItem , deleteCartItem} = require("../Controller/order")
+const { addToCart, getCartItems, updateCartItem , deleteCartItem,deleteAllCartItems} = require("../Controller/order")
 const router=express.Router()
 
 // Route to create a new order
 
 router.post('/AddtoCart', isAuthenticatedUserForAddtocard ,addToCart)
-router.get('/getCartItems', isAuthenticatedUserForAddtocard, getCartItems)
+router.get('/getCartItem', isAuthenticatedUserForAddtocard, getCartItems)
 router.put('/updateCartItem/:id', isAuthenticatedUserForAddtocard, updateCartItem)
 router.delete('/deleteCartItem/:id', isAuthenticatedUserForAddtocard, deleteCartItem)
+router.delete('/deleteAllCartItem', isAuthenticatedUserForAddtocard, deleteAllCartItems)
 
 
 module.exports = router
