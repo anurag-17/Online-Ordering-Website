@@ -30,13 +30,15 @@ const orderSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  deliveryDate: Date,
+  deliveryDate: {
+    type: Date,
+  },
 
   totalAmount: {
     type: Number,
   }
 });
 
-const Order = mongoose.model("Order", orderSchema);
+const Order = mongoose.model("cart", orderSchema);
 
 module.exports = Order;
