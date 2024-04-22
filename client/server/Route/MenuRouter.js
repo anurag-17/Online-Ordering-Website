@@ -21,7 +21,9 @@ router.route("/menuItems").get(getAllMenuItems);
 router.route("/menuItems/:id").get(getMenuItemById);
 
 // Update a menu item by ID
-router.route("/menuItems/:id").put(updateMenuItemById);
+// router.route("/menuItems/:id").put(updateMenuItemById);
+
+router.put("/menuItems/:id" , upload , updateMenuItemById)
 
 // Delete a menu item by ID
 router.route("/menuItems/:id").delete(deleteMenuItemById);
