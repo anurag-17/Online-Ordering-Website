@@ -1,6 +1,7 @@
 const express = require('express');
 const Order = require('../Model/order');
 const Cart = require("../Model/cart");
+const validateMongoDbId = require("../Utils/validateMongodbId");
 
 // Create an order
 exports.PlaceOrder = async (req, res, next) => {
@@ -103,6 +104,68 @@ exports.OrderList = async (req, res, next) => {
 };
 
 
+
+// Get Order By Id
+exports.getOrderById = async (req, res, next) => {
+    const { id } = req.params;
+    validateMongoDbId(id);
+
+    try {
+        const order = await Order.findById(id);
+        if (!order) {
+            return res.status(404).json({ error: 'Order not found' });
+        }
+        res.status(200).json({ message: 'Order retrieved successfully', order: order });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+
+// Update Order By Id
+
+
+exports.UpdateOrder = async (req, res, next) => {
+    const { id } = req.params;
+
+    try {
+        const foundOrder = await Order.findById(id);
+        if (!foundOrder) {
+            return res.status(404).json({ error: 'Order not found' });
+        }
+
+        const updatedOrder = await Order.findByIdAndUpdate(id, req.body, { new: true });
+        res.status(200).json({ message: 'Order updated successfully', order: updatedOrder });
+    } catch (error) {
+        next(error);
+    }
+};
+
+
+// DeleteOrder 
+
+exports.DeleteOrder = async(req,res,next)=>{
+    const{id}=req.params;
+    validateMongoDbId(id)
+    try{
+
+        const foundOrder =  await  Order.findById(id)
+        if(!foundOrder){
+            res.status(404).json({error: 'Order not found'})
+        }
+
+        // Check of order status is not pendding so order will not cancel
+        if(foundOrder.status!=='pending'){
+            return res.status(400).json({ error: 'Order cannot be cancelled because it is already being prepared or delivered' });
+        }
+
+        res.status(200).json({ message: 'Order cancelled successfully', order: foundOrder });
+
+    }catch(error){
+       next(error)
+    }
+
+}
 
 
 
