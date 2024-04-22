@@ -77,22 +77,23 @@ const LandingPage = () => {
             </div>
           </div>
         </nav>
-
         {/* ===================Second================== */}
 
-        <div className="poster-bg 2xl:h-[834px] h-screen  flex justify-center ">
+        <div className="poster-bg 2xl:h-[880px] h-screen  flex justify-center ">
           <div className="">
             <h1 className="alata font-[400] text-white 2xl:text-[65px] 2xl:leading-[70px] xl:text-[35px] xl:leading-[55px] 2xl:mt-[475px] xl:mt-[365px] lg:text-[25px] lg:leading-[30px lg:mt-[70%] mx-auto">
               Where’s your next food destination?
             </h1>
             <div className="flex 2xl:mt-12 xl:mt-6 lg:mt-5">
-              <button className=" alata font-[400] bg-[#DB5353] text-white mx-auto rounded-[5px] 2xl:w-[218px] 2xl:h-[60px] 2xl:text-[20px] xl:text-[16px] xl:px-3 xl:py-1">
+              <button className=" alata font-[400] bg-[#DB5353] text-white mx-auto rounded-[5px] 2xl:w-[218px] 2xl:h-[60px] 2xl:text-[20px] xl:text-[12px] xl:px-7 xl:py-[10px]">
                 Explore Dishes
               </button>
             </div>
             <div className="flex 2xl:mt-14 xl:mt-8 lg:mt-5">
-              <h1 className="alata font-[400] mx-auto text-white 2xl:text-[40px] 2xl:leading-[20px] xl:text-[25px] xl:leading-[20px]
-              lg:text-[20px] lg:leading-[20px]  ">
+              <h1
+                className="alata font-[400] mx-auto text-white 2xl:text-[40px] 2xl:leading-[20px] xl:text-[25px] xl:leading-[20px]
+              lg:text-[20px] lg:leading-[20px]  "
+              >
                 Save 30% on your first order
               </h1>
             </div>

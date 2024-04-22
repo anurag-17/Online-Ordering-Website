@@ -19,6 +19,7 @@ export const headItems = [
 ];
 
 const User = () => {
+  const token = JSON.parse(localStorage.getItem("admin_token"));
   const [isRefresh, setRefresh] = useState(false);
   const [allData, setAllData] = useState([]);
   const [isLoader, setIsLoader] = useState(false);
@@ -28,7 +29,7 @@ const User = () => {
   const [openPopup, setOpenPopup] = useState(false);
   const [previewData, setPreviewData] = useState({});
   const visiblePageCount = 10;
-  const {ad_token, isLoggedIn} = useSelector((state) => state.auth);
+  // const {ad_token, isLoggedIn} = useSelector((state) => state.auth);
   ;
 
   // console.log(previewData);
@@ -124,9 +125,9 @@ const User = () => {
     setIsLoader(true);
     const options = {
       method: "GET",
-      url: `/api/auth/all-users?page=${pageNo}&limit=${visiblePageCount}`,
+      url: `http://localhost:4000/api/auth/all-users?page=${pageNo}&limit=${visiblePageCount}`,
       headers: {
-        Authorization: ad_token,
+        Authorization: token,
         "Content-Type": "application/json",
       },
     };
@@ -335,7 +336,7 @@ const User = () => {
                     closeModal={closeDeleteModal}
                     refreshdata={refreshdata}
                     deleteId={Id}
-                    token={ad_token}
+                    token={token}
                   />
                 </Dialog.Panel>
               </Transition.Child>
