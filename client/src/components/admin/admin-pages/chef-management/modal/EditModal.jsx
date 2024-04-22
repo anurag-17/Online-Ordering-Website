@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 import Loader from "@/components/admin/loader/Index";
 
@@ -109,7 +109,7 @@ const EditModal = ({ closeModal, refreshdata, editData, updateId, token }) => {
       // console.log(formData);
       setLoading(true);
       try {
-        const res = await axios.put(`/api/chef/chefs/${updateId}`, formData, {
+        const res = await axios.put(`http://localhost:4000/api/chef/chefs/${updateId}`, formData, {
           headers: {
             authorization: `${token}`,
             "Content-Type": "application/json",
@@ -135,8 +135,7 @@ const EditModal = ({ closeModal, refreshdata, editData, updateId, token }) => {
 
   return (
     <>
-      {imageUploading && <Loader />}
-      <div className="">
+<ToastContainer autoClose={1000}/>      <div className="">
         <form action="" className="" onSubmit={handleSubmit}>
           <div className="flex flex-col justify-center px-4 lg:px-8 py-4 ">
             <div className="py-2 ">

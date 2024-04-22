@@ -37,7 +37,7 @@ export const sideMenus = [
   // },
   {
     id: 4,
-    label: "Ciusines",
+    label: "Cuisines",
     component : <Cuisines />,
   },
   {

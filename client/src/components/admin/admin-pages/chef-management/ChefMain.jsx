@@ -27,15 +27,15 @@ const ChefMain = () => {
   const [openEdit, setOpenEdit] = useState(false);
   const [updateId, setUpdateId] = useState("");
   const [editData, setEditData] = useState([]);
-  
+
   const [openDelete, setOpenDelete] = useState(false);
   const [Id, setId] = useState(null);
 
   const visiblePageCount = 10;
   const { token } = useSelector((state) => state?.auth);
   // console.log(allData);
-  
-  const refreshdata = () => {
+
+  const refreshData = () => {
     setRefresh(!isRefresh);
   };
 
@@ -43,9 +43,8 @@ const ChefMain = () => {
     setAddNewChef(false);
   };
 
-
   const handleDelete = (del_id) => {
-    setId(del_id)
+    setId(del_id);
     setOpenDelete(true);
   };
 
@@ -62,7 +61,7 @@ const ChefMain = () => {
       setIsLoader(true);
       const options = {
         method: "GET",
-        url: `/api/chef/chefs/${id}`,
+        url: `http://localhost:4000/api/chef/chefs/${id}`,
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -72,7 +71,7 @@ const ChefMain = () => {
         .request(options)
         .then((res) => {
           console.log(res?.data);
-          if (res.status === 200 || res.status === 304  ) {
+          if (res.status === 200 || res.status === 304) {
             // console.log(res);
             setIsLoader(false);
             setEditData(res?.data);
@@ -110,13 +109,13 @@ const ChefMain = () => {
     }
   };
   const handleClearSearch = () => {
-    refreshdata();
+    refreshData();
     setSearchText("");
   };
   const searchDataFunc = (search_cate) => {
     const options = {
       method: "GET",
-      url: `/api/chef/chefs?search=${search_cate}`,
+      url: `http://localhost:4000/api/chef/chefs?search=${search_cate}`,
       headers: {
         Authorization: token,
         "Content-Type": "multipart/form-data",
@@ -137,14 +136,12 @@ const ChefMain = () => {
       });
   };
 
-
-
   // get all data ----
   const getAllData = (pageNo) => {
     setIsLoader(true);
     const options = {
       method: "GET",
-      url: `/api/chef/chefs?page=${pageNo}&limit=${visiblePageCount}`,
+      url: "http://localhost:4000/api/chef/chefs",
       headers: {
         Authorization: token,
         "Content-Type": "application/json",
@@ -234,12 +231,15 @@ const ChefMain = () => {
                       <tr key={index}>
                         {/* {console.log(items)} */}
                         <td className="table_data">{index + 1}</td>
-                        <td className="table_data capitalize">
-                          {items?.name}
-                        </td>
+                        <td className="table_data capitalize">{items?.name}</td>
                         <td className="table_data">{items?.specialty} </td>
                         <td className="table_data">{items?.bio}</td>
-                        <td className="table_data">{items?.images}</td>
+                        <td className="table_data">
+                          <img
+                            src={items?.images}
+                            className="w-14 rounded-full"
+                          />
+                        </td>
                         <td className="table_data">
                           <div className="table_btn_div">
                             {/* <button
@@ -287,7 +287,7 @@ const ChefMain = () => {
 
       {/*---------- Add popup---------- */}
       <Transition appear show={addNewChef} as={Fragment}>
-        <Dialog as="div" className="relative z-[11]" onClose={()=>{}}>
+        <Dialog as="div" className="relative z-[11]" onClose={() => {}}>
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -314,14 +314,19 @@ const ChefMain = () => {
                 <Dialog.Panel className="w-full max-w-[600px] transform overflow-hidden rounded-2xl bg-white p-[40px]  text-left align-middle shadow-xl transition-all relative">
                   <Dialog.Title
                     as="h3"
-                    className="xl:text-[20px] text-[18px] font-medium leading-6 text-gray-900 " 
+                    className="xl:text-[20px] text-[18px] font-medium leading-6 text-gray-900 "
                   >
                     Add new chef
                   </Dialog.Title>
-                  <div className="absolute right-5 top-5 z-10 cursor-pointer" onClick={closeAddPopup}><CloseIcon /> </div>
+                  <div
+                    className="absolute right-5 top-5 z-10 cursor-pointer"
+                    onClick={closeAddPopup}
+                  >
+                    <CloseIcon />{" "}
+                  </div>
                   <AddModal
                     closeModal={closeAddPopup}
-                    refreshdata={refreshdata}
+                    refreshData={refreshData}
                     token={token}
                   />
                 </Dialog.Panel>
@@ -332,7 +337,7 @@ const ChefMain = () => {
       </Transition>
       {/*---------- Edit popup---------- */}
       <Transition appear show={openEdit} as={Fragment}>
-        <Dialog as="div" className="relative z-[11]" onClose={()=>{}}>
+        <Dialog as="div" className="relative z-[11]" onClose={() => {}}>
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -359,14 +364,19 @@ const ChefMain = () => {
                 <Dialog.Panel className="w-full max-w-[600px] transform overflow-hidden rounded-2xl bg-white p-[40px]  text-left align-middle shadow-xl transition-all relative">
                   <Dialog.Title
                     as="h3"
-                    className="xl:text-[20px] text-[18px] font-medium leading-6 text-gray-900 " 
+                    className="xl:text-[20px] text-[18px] font-medium leading-6 text-gray-900 "
                   >
-                  Edit chef's details
+                    Edit chefs details
                   </Dialog.Title>
-                  <div className="absolute right-5 top-5 z-10" onClick={closeEditPopup}><CloseIcon /> </div>
+                  <div
+                    className="absolute right-5 top-5 z-10"
+                    onClick={closeEditPopup}
+                  >
+                    <CloseIcon />{" "}
+                  </div>
                   <EditModal
                     closeModal={closeEditPopup}
-                    refreshdata={refreshdata}
+                    refreshData={refreshData}
                     editData={editData}
                     updateId={updateId}
                     token={token}
@@ -412,7 +422,7 @@ const ChefMain = () => {
                   </Dialog.Title>
                   <DeleteUser
                     closeModal={closeDeleteModal}
-                    refreshdata={refreshdata}
+                    refreshData={refreshData}
                     deleteId={Id}
                     token={token}
                   />

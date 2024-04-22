@@ -37,7 +37,7 @@ const FoodMenu = () => {
   // const { token } = useSelector((state) => state?.auth);
   // console.log(allData);
   
-  const refreshdata = () => {
+  const refreshData = () => {
     setRefresh(!isRefresh);
   };
 
@@ -112,7 +112,7 @@ const FoodMenu = () => {
     }
   };
   const handleClearSearch = () => {
-    refreshdata();
+    refreshData();
     setSearchText("");
   };
   const searchDataFunc = (search_cate) => {
@@ -326,8 +326,8 @@ const FoodMenu = () => {
                   </Dialog.Title>
                   <div className="absolute right-5 top-5 z-10 cursor-pointer" onClick={closeAddPopup}><CloseIcon /> </div>
                   <AddModal
-                    closeModal={closeAddPopup}
-                    refreshdata={refreshdata}
+                    closeAddPopup={closeAddPopup}
+                    refreshData={refreshData}
                     token={token}
                   />
                 </Dialog.Panel>
@@ -372,7 +372,7 @@ const FoodMenu = () => {
                   <div className="absolute right-5 top-5 z-10" onClick={closeEditPopup}><CloseIcon /> </div>
                   <EditModal
                     closeModal={closeEditPopup}
-                    refreshdata={refreshdata}
+                    refreshData={refreshData}
                     editData={editData}
                     updateId={updateId}
                     token={token}
@@ -418,7 +418,7 @@ const FoodMenu = () => {
                   </Dialog.Title>
                   <DeleteUser
                     closeModal={closeDeleteModal}
-                    refreshdata={refreshdata}
+                    refreshData={refreshData}
                     deleteId={Id}
                     token={token}
                   />

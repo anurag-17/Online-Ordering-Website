@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 
 
-const DeleteModal = ({ token,deleteId, closeModal, refreshdata}) => {
+const DeleteModal = ({ token,deleteId, closeModal, refreshData}) => {
 
   const [isLoading, setLoading] = useState(false);
 
@@ -14,7 +14,7 @@ const DeleteModal = ({ token,deleteId, closeModal, refreshdata}) => {
 
     const options = {
       method: "DELETE",
-      url: `/api/chef/chefs/${deleteId}`,
+      url: `http://localhost:4000/api/menu/menuItems/${deleteId}`,
       headers: {
         Authorization: token,
         'Content-Type': 'application/json',
@@ -28,7 +28,7 @@ const DeleteModal = ({ token,deleteId, closeModal, refreshdata}) => {
           setLoading(false);
           toast.success("Deleted successfully!");
           closeModal();
-          refreshdata();
+          refreshData();
         } else {
           setLoading(false);
           toast.error("Failed. something went wrong!");
