@@ -20,13 +20,13 @@ AWS.config.update({
 // Create an S3 service object
 const s3 = new AWS.S3();
 
-// Define the file filter function for multer
 const fileFilter = (req, file, cb) => {
-    if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
-        return cb(new Error('Only image files are allowed!'));
+    if (!file.originalname.match(/\.(jpg|jpeg|png|gif|svg)$/)) {
+        return cb(new Error('Only image files (jpg, jpeg, png, gif, svg) are allowed!'));
     }
     cb(null, true);
 };
+
 
 // Configure multer with file filter function
 const upload = multer({ fileFilter }).single('ProfileImage');

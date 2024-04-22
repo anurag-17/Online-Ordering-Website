@@ -36,6 +36,7 @@ app.prepare().then(() => {
   server.use('/api/DishType', require("./server/Route/DishTypeRouter"));
   server.use('/api/SpiceLevel', require("./server/Route/SpiceRouter"));
   server.use('/api/Orders', require("./server/Route/cartRoutes"));
+  server.use('/api/order',require("./server/Route/OrderRouter"))
 
   // Next.js request handling
   server.get('*', (req, res) => {
