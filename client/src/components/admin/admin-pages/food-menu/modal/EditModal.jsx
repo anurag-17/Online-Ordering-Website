@@ -3,7 +3,8 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import Loader from "@/components/admin/loader/Index";
 
-const EditModal = ({ closeModal, refreshdata, editData, updateId, token }) => {
+const EditModal = ({ closeModal, refreshdata, editData, updateId }) => {
+  const token = JSON.parse(localStorage.getItem("admin_token"));
   const [formData, setFormData] = useState();
   const [image, setImage] = useState("");
   const [isLoading, setLoading] = useState(false);
@@ -109,7 +110,7 @@ const EditModal = ({ closeModal, refreshdata, editData, updateId, token }) => {
       // console.log(formData);
       setLoading(true);
       try {
-        const res = await axios.put(`/api/chef/chefs/${updateId}`, formData, {
+        const res = await axios.put(`http://localhost:4000/api/menu/menuItems/${updateId}`, formData, {
           headers: {
             authorization: `${token}`,
             "Content-Type": "application/json",
@@ -161,7 +162,7 @@ const EditModal = ({ closeModal, refreshdata, editData, updateId, token }) => {
                 className="login-input w-full mt-1 "
                 defaultValue={editData?.specialty}
                 onChange={InputHandler}
-                required
+                // required
               />
             </div>
 
@@ -174,7 +175,7 @@ const EditModal = ({ closeModal, refreshdata, editData, updateId, token }) => {
                 className="login-input w-full mt-1 "
                 defaultValue={editData?.bio}
                 onChange={InputHandler}
-                required
+                // required
               />
             </div>
 
@@ -246,7 +247,7 @@ const EditModal = ({ closeModal, refreshdata, editData, updateId, token }) => {
                 disabled={isLoading}
                 className="primary_btn w-full"
               >
-                {isLoading ? "Loading.." : "Add"}
+                {isLoading ? "Loading.." : "Update"}
               </button>
             </div>
           </div>

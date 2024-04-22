@@ -5,18 +5,20 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "@/components/admin/loader/Index";
 const AddModal = ({ closeModal, refreshdata }) => {
+  const token = JSON.parse(localStorage.getItem("admin_token"));
+
   const [formData, setFormData] = useState({
     name: "",
     price: "",
     chef: "",
     description: "",
     images: [],
-  }); 
+  });
   const [image, setImage] = useState("");
   const [isLoading, setLoading] = useState(false);
   const [imageDisable, setImageDisable] = useState(false);
   const [imageUploading, setImageUploading] = useState(false);
-  const { ad_token } = useSelector((state) => state.auth);
+  // const { token } = useSelector((state) => state.auth);
 
   const InputHandler = (e) => {
     if (e.target.name === "image") {
@@ -36,7 +38,7 @@ const AddModal = ({ closeModal, refreshdata }) => {
 
       const response = await axios.post(`/api/auth/upload`, image, {
         headers: {
-          authorization: `${ad_token}`,
+          authorization: `${token}`,
           "Content-Type": "multipart/form-data",
         },
       });
@@ -68,7 +70,7 @@ const AddModal = ({ closeModal, refreshdata }) => {
       try {
         const response = await axios.post(`/api/chef/chefs`, formData, {
           headers: {
-            authorization: `${ad_token}`,
+            authorization: `${token}`,
             "Content-Type": "application/json",
           },
         });

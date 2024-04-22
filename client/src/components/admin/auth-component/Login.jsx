@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import Link from "next/link";
 
 import RightSection from "./RightSection";
-import { setToken, removeToken,adDetails } from "@/redux/adminSlice/authSlice";
+import { setToken, removeToken, adDetails } from "@/redux/adminSlice/authSlice";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -28,17 +28,23 @@ const Login = () => {
 
     setLoading(true);
     try {
-      const res = await axios.post("/api/auth/adminLogin", loginDetails, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const res = await axios.post(
+        "http://localhost:4000/api/auth/adminLogin",
+        loginDetails,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
       // console.log(res);
       if (res?.data?.success) {
         toast.success("Login successfully!");
         setLoading(false);
         dispatch(setToken(res?.data?.token));
-        router.push("/admin ");
+        localStorage.setItem("admin_token", JSON.stringify(res?.data?.token));
+
+        router.push("/admin");
       } else {
         toast.error("Login failed please try later!");
         dispatch(removeToken());

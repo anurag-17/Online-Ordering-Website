@@ -1,5 +1,5 @@
 const express = require('express');
-const Order = require('../Model/order');
+const Order = require('../Model/Order');
 const Cart = require("../Model/cart");
 
 // Create an order

@@ -1,34 +1,32 @@
+
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
 
-
-const DeleteUser = ({ deleteId, closeModal, refreshdata, token}) => {
-
+const DeleteCuisines = ({ deleteId, closeModal, refreshData }) => {
   const [isLoading, setLoading] = useState(false);
+  const token = JSON.parse(localStorage.getItem("admin_token"));
 
   const handleDelete = (e) => {
-    
     e.preventDefault();
     setLoading(true);
 
     const options = {
       method: "DELETE",
-      url: `http://localhost:4000/api/auth/deleteaUser/${deleteId}`,
+      url: `http://localhost:4000/api/cuisines/deleteCuisines/${deleteId}`,
       headers: {
         Authorization: token,
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     };
-
     axios
       .request(options)
       .then(function (res) {
         if (res.data?.success || res.status === 200) {
           setLoading(false);
-          toast.success("User deleted successfully!");
+          toast.success("Deleted successfully!");
           closeModal();
-          refreshdata();
+          refreshData();
         } else {
           setLoading(false);
           toast.error("Failed. something went wrong!");
@@ -41,7 +39,6 @@ const DeleteUser = ({ deleteId, closeModal, refreshdata, token}) => {
         toast.error("Server error!");
       });
   };
-
   return (
     <>
       <div className="mt-2">
@@ -52,25 +49,22 @@ const DeleteUser = ({ deleteId, closeModal, refreshdata, token}) => {
 
       <div className="mt-8">
         <div className="flex md:flex-row flex-col gap-3 justify-between gap-x-5">
-          <button
-            className="w-full secondary_btn"
-            onClick={()=>closeModal()}
-          >
+          <button className="w-full secondary_btn" onClick={() => closeModal()}>
             No, Keep It
           </button>
-        
-            <button
-              className={`w-full  
-              ${isLoading ?  "text-[gray]" : "delete_btn" }`}
-              disabled={isLoading}
-              onClick={handleDelete}
-            >
-              { isLoading ? "Loading..." : "Yes, Delete It" }
-            </button>
+
+          <button
+            className={`w-full 
+              ${isLoading ? "text-[gray]" : "delete_btn"}`}
+            disabled={isLoading}
+            onClick={handleDelete}
+          >
+            {isLoading ? "Loading..." : "Yes, Delete It"}
+          </button>
         </div>
       </div>
     </>
   );
 };
 
-export default DeleteUser;
+export default DeleteCuisines;
