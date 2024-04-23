@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import Loader from "@/components/admin/loader/Index";
 
-const EditModal = ({ closeModal, refreshdata, editData, updateId }) => {
+const EditModal = ({ closeModal, refreshData, editData, updateId }) => {
   const token = JSON.parse(localStorage.getItem("admin_token"));
   const [formData, setFormData] = useState();
   const [image, setImage] = useState("");
@@ -44,7 +44,7 @@ const EditModal = ({ closeModal, refreshdata, editData, updateId }) => {
         if (response.status === 200) {
           setLoading(false);
           toast.success("Removed successfully !");
-          refreshdata();
+          refreshData();
         } else {
           setLoading(false);
           toast.error("Failed. something went wrong!");
@@ -120,7 +120,7 @@ const EditModal = ({ closeModal, refreshdata, editData, updateId }) => {
         if (res.status === 200) {
           toast.success("Details updated successfully.");
           setLoading(false);
-          refreshdata();
+          refreshData();
           closeModal();
         }  else {
           toast.error("Invalid details");

@@ -1,100 +1,78 @@
 import React, { useState } from "react";
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "@/components/admin/loader/Index";
-const AddModal = ({ closeModal, refreshdata }) => {
-  const [formData, setFormData] = useState({
+
+const AddModal = ({ closeModal, refreshData }) => {
+  const token = JSON.parse(localStorage.getItem("admin_token"));
+
+  const [chefData, setChefData] = useState({
     name: "",
     specialty: "",
     bio: "",
-    images: [],
+    images: null, // Changed to match key in state
   });
-  const [image, setImage] = useState("");
   const [isLoading, setLoading] = useState(false);
-  const [imageDisable, setImageDisable] = useState(false);
-  const [imageUploading, setImageUploading] = useState(false);
-  const {ad_token, isLoggedIn} = useSelector((state) => state.auth);
 
-  const InputHandler = (e) => {
-    if (e.target.name === "image") {
-      setImage({ file: e.target.files[0] });
-    } else {
-      setFormData({ ...formData, [e.target.name]: e.target.value });
-    }
-  };
+  const inputHandler = (e) => {
+    const { name, value, files } = e.target;
 
-  const uploadVideo = async () => {
-    setImageUploading(true);
-    try {
-      if (!image) {
-        setImageUploading(false);
-        return toast.warn("Please upload video");
-      }
-
-      const response = await axios.post(`/api/auth/upload`, image, {
-        headers: {
-          authorization: `${ad_token}`,
-          "Content-Type": "multipart/form-data",
-        },
+    if (name === "images") {
+      setChefData({
+        ...chefData,
+        [name]: files[0], // Use files[0] for file input
       });
-      if (response.status === 200) {
-        const videoUrl = response?.data?.url;
-        setFormData({ ...formData, ["images"]: videoUrl });
-        setImageDisable(true);
-        setImageUploading(false);
-      } else {
-        setImageDisable(false);
-        setImageUploading(false);
-      }
-    } catch (error) {
-      console.error(
-        "Error uploading video:",
-        error.response?.data || error.message
-      );
-      setImageUploading(false);
+    } else {
+      setChefData({
+        ...chefData,
+        [name]: value,
+      });
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData.bgUrl == "") {
-      toast.error("Please upload video");
-    } else {
-      // console.log(formData);
-      setLoading(true);
-      try {
-        const response = await axios.post(`/api/chef/chefs`, formData, {
+    setLoading(true); // Set loading to true when form is submitted
+
+    try {
+      const formData = new FormData();
+      formData.append("name", chefData.name);
+      formData.append("specialty", chefData.specialty);
+      formData.append("bio", chefData.bio);
+      formData.append("images", chefData.images);
+
+      const response = await axios.post(
+        `http://localhost:4000/api/chef/chefs`,
+        formData,
+        {
           headers: {
-            authorization: `${ad_token}`,
-            "Content-Type": "application/json",
+            authorization: `${token}`,
+            "Content-Type": "multipart/form-data", // Use multipart/form-data for file uploads
           },
-        });
-        console.log(response);
-        if (response.status === 201) {
-          toast.success("Page added successfully.");
-          setLoading(false);
-          refreshdata();
-          closeModal();
-        } else if (response.status === 203) {
-          toast.error(response?.data?.error);
-          setLoading(false);
-        } else {
-          toast.error("Invalid details");
-          setLoading(false);
         }
-      } catch (error) {
-        console.error("Error during category:", error);
-        toast.error("Something went wrong, try again later.");
+      );
+      
+      if (response.status === 201) {
+        toast.success("Chef added successfully.");
+        setLoading(false);
+        refreshData();
+        closeModal();
+      } else {
+        toast.error("Invalid details");
         setLoading(false);
       }
+    } catch (error) {
+      console.error("Error during category:", error);
+      toast.error("Something went wrong, try again later.");
+      setLoading(false);
     }
   };
 
   return (
     <>
-      {imageUploading && <Loader />}
+      <ToastContainer autoClose={1000} />
       <div className="">
         <form action="" className="" onSubmit={handleSubmit}>
           <div className="flex flex-col justify-center px-4 lg:px-8 py-4 ">
@@ -105,7 +83,7 @@ const AddModal = ({ closeModal, refreshdata }) => {
                 name="name"
                 placeholder="Enter chef name"
                 className="login-input w-full mt-1 "
-                onChange={InputHandler}
+                onChange={inputHandler}
                 required
               />
             </div>
@@ -117,7 +95,7 @@ const AddModal = ({ closeModal, refreshdata }) => {
                 name="specialty"
                 placeholder="Enter specialty"
                 className="login-input w-full mt-1 "
-                onChange={InputHandler}
+                onChange={inputHandler}
               />
             </div>
 
@@ -128,42 +106,20 @@ const AddModal = ({ closeModal, refreshdata }) => {
                 name="bio"
                 placeholder="Enter chef`s bio"
                 className="login-input w-full mt-1 "
-                onChange={InputHandler}
+                onChange={inputHandler}
               />
             </div>
 
-            <div className="py-2 mt-1 flex  items-end gap-x-10">
-              <div className="w-[50%]">
-                <span className="login-input-label cursor-pointer mb-1">
-                  Images :
-                </span>
-                <div className="flex items-center  w-full mt-1">
-                  <input
-                    id="image"
-                    type="file"
-                    name="image"
-                    className="w-full"
-                    onChange={InputHandler}
-                    disabled={imageDisable}
-                    // accept="video/mp4,video/x-m4v,video/*"
-                  />
-                </div>
-              </div>
-              <div className="">
-                <button
-                  className={`focus-visible:outline-none  text-white text-[13px] px-4 py-1 rounded
-                            ${imageDisable ? "bg-[green]" : "bg-[#070708bd]"}`}
-                  type="button"
-                  onClick={uploadVideo}
-                  disabled={imageDisable || imageUploading}
-                >
-                  {imageDisable
-                    ? "Uploaded"
-                    : imageUploading
-                    ? "Loading.."
-                    : "Upload"}
-                </button>
-              </div>
+            <div>
+              <label className="custom_input_label">Profile Image</label>
+              <input
+                type="file"
+                onChange={inputHandler}
+                name="images" // Changed to match key in state
+                className="custom_inputt"
+                accept="image/*" // Limit to image files
+                required
+              />
             </div>
 
             <div className="py-[20px] flex items-center justify-center md:justify-end  md:flex-nowrap gap-y-3 gap-x-3 ">
