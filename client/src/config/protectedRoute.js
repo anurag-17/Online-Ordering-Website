@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
-
 import axios from "axios";
 import Loader from "@/components/admin/loader/Index";
 import { setToken, removeToken, adDetails } from "@/redux/adminSlice/authSlice";

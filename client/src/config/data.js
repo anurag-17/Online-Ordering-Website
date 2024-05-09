@@ -13,17 +13,17 @@ export const sideMenus = [
   {
     id: 1,
     label: "Chef managment",
-    component : <ChefMain />,
+    component: <ChefMain />,
   },
   {
     id: 2,
     label: "User management",
-    component : <User />,
+    component: <User />,
   },
   {
     id: 3,
     label: " Menu Items",
-    component : <FoodMenu />,
+    component: <FoodMenu />,
   },
   {
     id: 4,
