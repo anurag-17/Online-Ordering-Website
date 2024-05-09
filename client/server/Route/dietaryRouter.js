@@ -15,7 +15,7 @@ router.route("/dietaries/:id").get(getDietaryById);
 
 // Update a dietary by ID
 
-router.route("/dietaries/:id").put(updateDietaryById);
+router.put("/dietaries/:id",upload,updateDietaryById)
 
 // Delete a dietary by ID
 

@@ -21,8 +21,8 @@ const s3 = new AWS.S3();
 
 // Define the file filter function for multer
 const fileFilter = (req, file, cb) => {
-    if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
-        return cb(new Error('Only image files are allowed!'));
+    if (!file.originalname.match(/\.(jpg|jpeg|png|gif|svg)$/)) {
+        return cb(new Error('Only image files (jpg, jpeg, png, gif, svg) are allowed!'));
     }
     cb(null, true);
 };
@@ -142,6 +142,8 @@ exports.getDietaryById = async (req, res, next) => {
 
 // Update a Dietary by ID
 exports.updateDietaryById = async (req, res, next) => {
+
+    console.log(req.body)
     const { id } = req.params;
     validateMongoDbId(id);
   
@@ -175,7 +177,7 @@ exports.updateDietaryById = async (req, res, next) => {
             const bucketName = process.env.BUCKET;
             const uploadParams = {
                 Bucket: bucketName,
-                Key: `profile-images/${req.body.title}-${Date.now()}-${i}`,
+                Key: `profile-images/${req.body.title || dietary.title}-${Date.now()}-${i}`,
                 Body: image.buffer,
                 ContentType: image.mimetype
             };

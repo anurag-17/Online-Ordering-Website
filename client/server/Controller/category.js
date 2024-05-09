@@ -96,11 +96,11 @@ exports.getAllCategories = async (req, res, next) => {
       categoryQuery = categoryQuery.where('title').regex(new RegExp(search, 'i'));
     }
 
-    const totalItems = await Category.countDocuments(categoryQuery);
+    const totalItems = await Category.countDocuments(categoryQuery)
     const totalPages = Math.ceil(totalItems / itemsPerPage);
 
     const skip = (currentPage - 1) * itemsPerPage;
-    const cuisines = await categoryQuery.skip(skip).limit(itemsPerPage);
+    const cuisines = await categoryQuery.sort({ title: 1 }).skip(skip).limit(itemsPerPage);
 
     res.json({
       totalItems,
@@ -129,21 +129,21 @@ exports.getCategoryById = async (req, res, next) => {
   }
 };
 
-// Update a category by ID
-exports.updateCategoryById = async (req, res, next) => {
-  const { id } = req.params;
-  validateMongoDbId(id);
+// // Update a category by ID
+// exports.updateCategoryById = async (req, res, next) => {
+//   const { id } = req.params;
+//   validateMongoDbId(id);
 
-  try {
-    const category = await Category.findByIdAndUpdate(id, req.body, { new: true });
-    if (!category) {
-      return res.status(404).json({ error: "Cuisens not found" });
-    }
-    res.json(category);
-  } catch (error) {
-    next(error);
-  }
-};
+//   try {
+//     const category = await Category.findByIdAndUpdate(id, req.body, { new: true });
+//     if (!category) {
+//       return res.status(404).json({ error: "Cuisens not found" });
+//     }
+//     res.json(category);
+//   } catch (error) {
+//     next(error);
+//   }
+// };
 
 // Delete a category by ID
 exports.deleteCategoryById = async (req, res, next) => {
@@ -158,5 +158,86 @@ exports.deleteCategoryById = async (req, res, next) => {
     res.json({ message: "Cuisens deleted successfully" });
   } catch (error) {
     next(error);
+  }
+};
+
+
+// Update a Dietary by ID
+exports.updateCategoryById = async (req, res, next) => {
+  const { id } = req.params;
+  validateMongoDbId(id);
+
+  try {
+      const dishtype = await Category.findById(id);
+      if (!dishtype) {
+          return res.status(404).json({ error: "dishtype not found" });
+      }
+
+      // Update dietary details
+      const updatedFields = req.body;
+      const updateddishtype = await Category.findByIdAndUpdate(id, updatedFields, { new: true });
+
+      // Check if req.file exists and has expected properties (for image upload)
+      if (req.file) {
+          // Delete old images from S3 bucket
+          await deleteImagesFromS3(dishtype.ProfileImage);
+
+          // Upload new images to S3 bucket
+          let profileImages = req.file; // Change const to let for reassignment
+
+          // Ensure profileImages is always an array
+          if (!Array.isArray(profileImages)) {
+              profileImages = [profileImages];
+          }
+
+          const imageUrls = [];
+          for (let i = 0; i < profileImages.length; i++) {
+              const image = profileImages[i];
+              const bucketName = process.env.BUCKET;
+              const uploadParams = {
+                  Bucket: bucketName,
+                  Key: `profile-images/${req.body.title || dishtype.title}-${Date.now()}-${i}`,
+                  Body: image.buffer,
+                  ContentType: image.mimetype
+              };
+
+              const data = await s3.upload(uploadParams).promise();
+              imageUrls.push(data.Location);
+          }
+
+          // Convert array of image URLs into a single string
+          const profileImageString = imageUrls.join(', ');
+
+          // Update dietary with new images
+          updateddishtype.ProfileImage = profileImageString;
+          await updateddishtype.save();
+      }
+
+      res.status(200).json({ message: 'DishType updated successfully', updateddishtype });
+  } catch (error) {
+      next(error);
+  }
+};
+
+
+const deleteImagesFromS3 = async (imageUrls) => {
+  try {
+    if (!Array.isArray(imageUrls)) {
+      // If imageUrls is not an array, convert it to an array with a single element
+      imageUrls = [imageUrls];
+    }
+
+    const promises = imageUrls.map(async (imageUrl) => {
+      const key = imageUrl.split('/').pop();
+      const params = {
+        Bucket: process.env.BUCKET,
+        Key: key
+      };
+      await s3.deleteObject(params).promise();
+    });
+    await Promise.all(promises);
+  } catch (error) {
+    console.error("Error deleting images from S3:", error);
+    throw error;
   }
 };

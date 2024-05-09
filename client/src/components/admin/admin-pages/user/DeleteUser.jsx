@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 
 
-const DeleteUser = ({ deleteId, closeModal, refreshdata,token}) => {
+const DeleteUser = ({ deleteId, closeModal, refreshdata, token}) => {
 
   const [isLoading, setLoading] = useState(false);
 
@@ -14,7 +14,7 @@ const DeleteUser = ({ deleteId, closeModal, refreshdata,token}) => {
 
     const options = {
       method: "DELETE",
-      url: `/api/auth/deleteaUser/${deleteId}`,
+      url: `http://localhost:4000/api/auth/deleteaUser/${deleteId}`,
       headers: {
         Authorization: token,
         'Content-Type': 'application/json',

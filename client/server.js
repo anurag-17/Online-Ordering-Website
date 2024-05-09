@@ -7,6 +7,7 @@ require('dotenv').config();
 const dev = process.env.NODEENV !== 'production';
 const app = next({ dev });
 const handle = app.getRequestHandler();
+const{notFoundMiddleware} = require("./server/middleware/notfoundmiddleware")
 const connectDB = require("./server/Utils/db")
 // console.log(process.env);
 const apiRoutes = require("./server/Route/AuthRouter")
@@ -35,7 +36,12 @@ app.prepare().then(() => {
   server.use('/api/dietary', require("./server/Route/dietaryRouter"));
   server.use('/api/DishType', require("./server/Route/DishTypeRouter"));
   server.use('/api/SpiceLevel', require("./server/Route/SpiceRouter"));
-  server.use('/api/Orders', require("./server/Route/OrderRoutes"));
+  server.use('/api/Orders', require("./server/Route/cartRoutes"));
+  server.use('/api/order',require("./server/Route/OrderRouter"))
+
+  // Not found Middleware
+
+  server.use(notFoundMiddleware)
 
   // Next.js request handling
   server.get('*', (req, res) => {

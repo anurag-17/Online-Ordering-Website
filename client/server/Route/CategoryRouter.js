@@ -20,8 +20,8 @@ router.route("/getAllCuisines").get(getAllCategories);
 router.route("/getCuisinesById/:id").get(getCategoryById);
 
 // Update a category by ID
-router.route("/updateCuisines/:id").put(updateCategoryById);
 
+router.put("/updateCuisines/:id" , upload , updateCategoryById)
 // Delete a category by ID
 router.route("/deleteCuisines/:id").delete(deleteCategoryById);
 

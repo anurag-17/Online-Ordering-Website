@@ -4,12 +4,10 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 
-const AddModal = ({ closeAddPopup, refreshData }) => {
+const AddDishtype = ({ closeDrawer, refreshData }) => {
   const token = JSON.parse(localStorage.getItem("admin_token"));
-  const [dishDetails, setDishDetails] = useState({
-    name: "",
-    price: "",
-    description: "",
+  const [dietaryDetail, setDietaryDetail] = useState({
+    title: "",
     ProfileImage: null, // Changed to null
   });
 
@@ -18,18 +16,16 @@ const AddModal = ({ closeAddPopup, refreshData }) => {
 
     try {
       const formData = new FormData();
-      formData.append("name", dishDetails.name); // Changed to name
-      formData.append("price", dishDetails.price); // Added price
-      formData.append("description", dishDetails.description); // Added description
-      formData.append("ProfileImage", dishDetails.ProfileImage);
+      formData.append("title", dietaryDetail.title);
+      formData.append("ProfileImage", dietaryDetail.ProfileImage); // Append image to FormData
 
       const response = await axios.post(
-        "http://localhost:4000/api/menu/menuItems",
+        "http://localhost:4000/api/DishType/dishTypes",
         formData,
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
+            "Content-Type": "multipart/form-data", // Changed content type
           },
         }
       );
@@ -37,7 +33,7 @@ const AddModal = ({ closeAddPopup, refreshData }) => {
       if (response.status === 201) {
         toast.success("Dietary Added Successfully!");
         refreshData();
-        closeAddPopup();
+        closeDrawer();
       } else {
         toast.error(response.data.message);
       }
@@ -51,14 +47,15 @@ const AddModal = ({ closeAddPopup, refreshData }) => {
     const { name, value, files } = e.target;
 
     if (name === "ProfileImage") {
-      setDishDetails({
-        ...dishDetails,
-        ProfileImage: files[0],
+      // Changed to match key in state
+      setDietaryDetail({
+        ...dietaryDetail,
+        ProfileImage: files[0], // Set the selected image file
       });
     } else {
-      setDishDetails({
-        ...dishDetails,
-        [name]: value, // Use name instead of e.target.value
+      setDietaryDetail({
+        ...dietaryDetail,
+        [name]: value,
       });
     }
   };
@@ -75,52 +72,30 @@ const AddModal = ({ closeAddPopup, refreshData }) => {
           className="flex flex-wrap bg-white border rounded-lg 2xl:p-2 xl:p-2 lg:p-1 md:p-2 p-1 mx-auto"
         >
           <div className="w-1/2">
-            <label className="custom_input_label">Dish Name</label>
+            <label className="custom_input_label">Dietary Name</label>
             <input
               onChange={inputHandler}
-              value={dishDetails.name}
+              value={dietaryDetail.title}
               type="text"
-              name="name"
+              name="title"
               className="custom_inputt"
               required
             />
           </div>
-          <div className="w-1/2">
-            <label className="custom_input_label">Dish Price</label>
-            <input
-              onChange={inputHandler}
-              value={dishDetails.price}
-              type="text"
-              name="price"
-              className="custom_inputt"
-              required
-            />
-          </div>
-          <div className="w-full">
-            <label className="custom_input_label">Dish Description</label>
-            <input
-              onChange={inputHandler}
-              value={dishDetails.description}
-              type="text"
-              name="description"
-              className="custom_inputt"
-              required
-            />
-          </div>
-          <div className="w-full">
+          <div>
             <label className="custom_input_label">Profile Image</label>
             <input
               type="file"
               onChange={inputHandler}
-              name="ProfileImage"
+              name="ProfileImage" // Changed to match key in state
               className="custom_inputt"
-              accept="image/*"
+              accept="image/*" // Limit to image files
               required
             />
           </div>
           <div className="w-full flex justify-center">
             <button type="submit" className="custom_btn">
-              Add Dish
+              Add Dietary
             </button>
           </div>
         </form>
@@ -129,4 +104,4 @@ const AddModal = ({ closeAddPopup, refreshData }) => {
   );
 };
 
-export default AddModal;
+export default AddDishtype;
